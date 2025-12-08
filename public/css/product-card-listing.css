@@ -1,0 +1,89 @@
+/* Estilos para cards de produto nas listagens */
+.product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding-bottom: 1rem;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.product-card h3 {
+    padding: 0.75rem 1rem 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 3em;
+}
+
+.product-card .price {
+    padding: 0 1rem 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.product-card .stock {
+    padding: 0 1rem 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.add-to-cart-btn-listing {
+    margin: 0 1rem 0.5rem;
+    padding: 0.75rem;
+    background: var(--color-dark);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.add-to-cart-btn-listing:hover {
+    background: var(--color-primary);
+    color: var(--color-dark);
+    transform: translateY(-2px);
+}
+
+.add-to-cart-btn-listing:active {
+    transform: translateY(0);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .product-card img {
+        height: 200px;
+    }
+    
+    .product-card h3 {
+        font-size: 0.9rem;
+        min-height: 2.5em;
+    }
+    
+    .add-to-cart-btn-listing {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+}
