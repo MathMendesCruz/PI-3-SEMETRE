@@ -20,9 +20,14 @@
                 </div>
                 <div class="auth-field">
                     <label for="login-password">Senha</label>
-                    <input type="password" id="login-password" class="input-field" placeholder="••••••" required>
+                    <div style="position: relative;">
+                        <input type="password" id="login-password" class="input-field" placeholder="••••••" required>
+                        <button type="button" onclick="togglePassword('login-password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
-                
+
                 <p class="auth-link">É administrador? <a href="{{ route('adm-dashboard') }}">Entre no portal!</a></p>
                 <p class="auth-link">Não tem conta? <a href="{{ route('cadastro') }}">Cadastre-se aqui!</a></p>
                 <button type="submit" class="btn btn-dark" style="width: 100%; margin-top: 20px;">Entrar</button>
@@ -31,4 +36,21 @@
 </div>
 
 @include('partials.contact')
+
+<script>
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 @endsection

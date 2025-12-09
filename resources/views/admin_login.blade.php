@@ -36,19 +36,24 @@
 
         <form action="{{ route('admin.login.post') }}" method="POST">
             @csrf
-            
+
             <div style="margin-bottom: 20px;">
                 <label for="email" style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">E-mail Administrativo</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required 
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required
                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;"
                        placeholder="admin@elegancejoias.com">
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label for="password" style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">Senha</label>
-                <input type="password" id="password" name="password" required 
-                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;"
-                       placeholder="••••••••">
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" required
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;"
+                           placeholder="••••••••">
+                    <button type="button" onclick="togglePassword('password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
             </div>
 
             <div style="margin-bottom: 20px;">
@@ -80,4 +85,21 @@
         </div>
     </div>
 </div>
+
+<script>
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 @endsection
