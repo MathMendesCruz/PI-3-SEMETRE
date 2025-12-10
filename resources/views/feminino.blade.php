@@ -113,17 +113,30 @@
                                     data-product-img="{{ asset('img/' . $product->image) }}">
                                 Adicionar ao Carrinho
                             </button>
+                            @endif
                         </div>
                     @empty
                         <p style="grid-column: 1 / -1; text-align: center;">Nenhum produto disponível nesta categoria.</p>
                     @endforelse
                 </div>
+
+                <div class="pagination-container" id="pagination-container" style="display: none;">
+                    <div class="pagination">
+                        <button class="pagination-btn" id="prev-page" disabled>Anterior</button>
+                        <div class="pagination-info">
+                            <span id="current-page">1</span> de <span id="total-pages">1</span>
+                        </div>
+                        <button class="pagination-btn" id="next-page">Próximo</button>
+                    </div>
+                    <p class="pagination-text"><span id="results-count">0</span> resultados encontrados</p>
+                </div>
+            </section>
         </div>
     </main>
 
-    @include('partials.contact')
+@include('partials.contact')
 @endsection
 
-    @section('extra-scripts')
-    <script src="{{ asset('js/filters-api.js') }}"></script>
-    @endsection
+@section('extra-scripts')
+<script src="{{ asset('js/filters-api.js') }}"></script>
+@endsection
