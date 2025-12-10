@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Intencionalmente vazio: cadastros (usuários, produtos) devem ser feitos via aplicação em produção.
+        // Admin padrão (idempotente) e catálogo base + ingestão automática das imagens locais.
+        $this->call([
+            AdminUserSeeder::class,
+            ProductSeeder::class,
+            ProductFromImagesSeeder::class,
+        ]);
     }
 }

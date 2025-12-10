@@ -46,9 +46,8 @@
                 <button type="submit" class="btn btn-dark" style="width: 100%; margin-top: 20px;">Cadastrar</button>
             </form>
         </div>
-    </main>
-
-    <section class="contact-section"><div class="content"><h2>Entre em contato com a gente caso tenha alguma dúvida ou sugestão! :) <h2>
+    </div>
+</div>
 
         <form action="{{ route('suporte') }}" method="POST"><div class="input-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
         <input type="email" placeholder="Digite seu email" class="input-field" name="email">
