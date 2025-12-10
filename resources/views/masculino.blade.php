@@ -128,3 +128,7 @@
 
 @include('partials.contact')
 @endsection
+
+@section('extra-scripts')
+<script src="{{ asset('js/filters.js') }}"></script>
+@endsection

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyFiltersBtn = document.getElementById('apply-filters');
     const categoryFilters = document.getElementById('category-filters');
     const colorFilters = document.getElementById('color-filters');
+    const brandFilters = document.getElementById('brand-filters');
     const pagination = document.querySelector('.pagination');
 
     if (!productListing) return;
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterState = {
         category: 'todos',
         color: null,
+        brand: null,
         maxPrice: 10000,
         currentPage: 1,
         productsPerPage: 6
@@ -33,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
             element: el,
             price: parseFloat(el.getAttribute('data-price') || 0),
             color: el.getAttribute('data-color') || 'neutro',
-            type: el.getAttribute('data-type') || 'outros'
+            type: el.getAttribute('data-type') || 'outros',
+            brand: el.getAttribute('data-brand') || null,
         }));
     }
 
@@ -44,6 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
             priceValue.textContent = `R$${filterState.maxPrice.toLocaleString('pt-BR')}`;
             filterState.currentPage = 1;
         });
+    }
+
+    // ===== MARCA =====
+    if (brandFilters) {
+        const brandItems = brandFilters.querySelectorAll('.filter-item');
+        brandItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                brandItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                const chosen = item.getAttribute('data-brand');
+                filterState.brand = chosen === 'todos' ? null : chosen;
+                filterState.currentPage = 1;
+                applyFilters();
+            });
+        });
+        // marca padrão: todas
+        brandItems[0]?.classList.add('active');
     }
 
     // ===== CATEGORIA =====
@@ -113,6 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Filtro de cor
             if (filterState.color && p.color !== filterState.color) show = false;
+
+            // Filtro de marca
+            if (filterState.brand && p.brand !== filterState.brand) show = false;
 
             // Filtro de categoria
             if (filterState.category !== 'todos' && p.type !== filterState.category) show = false;

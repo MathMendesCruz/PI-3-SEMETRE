@@ -78,7 +78,7 @@ class ProductSeeder extends Seeder
                 'category' => 'Feminino',
                 'brand' => 'GUCCI',
                 'color' => 'ouro',
-                'image' => 'Feminino/Braceletes Femininos/bracelete_cartier_22047_1_28dbde5bd3b4e0a7704913d2fd5c170e-c9263be1fb1c4b56d317515741349904-1024-1024.webp',
+                'image' => 'Feminino/Braceletes Femininos/bracelete_bali_cartier_22047_1_28dbde5bd3b4e0a7704913d2fd5c170e-c9263be1fb1c4b56d317515741349904-1024-1024.webp',
                 'stock' => 28,
                 'min_stock' => 6,
             ],

@@ -56,6 +56,7 @@
             </div>
             <div class="view-more-container">
                 <button class="btn-outline" id="load-more-btn">Ver mais</button>
+                <button class="btn-outline" id="load-less-btn" style="display:none;">Ver menos</button>
             </div>
         </section>
 
@@ -152,10 +153,12 @@
         // Array de imagens disponíveis para usar como fallback
         const availableImages = ['anel1.png', 'anel2.png', 'anelverde.webp', 'colar1.png', 'colar2.png', 'relogio1.png'];
 
-        const loadMoreBtn = document.getElementById('load-more-btn');
         const gridContainer = document.getElementById('product-grid-container');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const loadLessBtn = document.getElementById('load-less-btn');
 
-        if (!loadMoreBtn) return;
+        if (!loadMoreBtn || !gridContainer) return;
+        const initialHTML = gridContainer.innerHTML;
 
         loadMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -189,7 +192,23 @@
             if (currentIndex >= allProducts.length) {
                 loadMoreBtn.style.display = 'none';
             }
+
+            // Exibe o ver menos quando houver mais que a página inicial
+            if (currentIndex > productsPerPage && loadLessBtn) {
+                loadLessBtn.style.display = '';
+            }
         });
+
+        if (loadLessBtn) {
+            loadLessBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Restaura a listagem inicial
+                gridContainer.innerHTML = initialHTML;
+                currentIndex = productsPerPage;
+                loadMoreBtn.style.display = allProducts.length > productsPerPage ? '' : 'none';
+                loadLessBtn.style.display = 'none';
+            });
+        }
 
         // Esconde o botão se já não há mais produtos para mostrar
         if (allProducts.length <= productsPerPage) {
