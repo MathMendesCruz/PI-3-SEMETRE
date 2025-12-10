@@ -23,7 +23,7 @@
 
     <script src="{{ asset('js/auth.js') }}"></script>
     <script src="{{ asset('js/cart.js') }}"></script>
-    <script type="module" src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
     @yield('extra-scripts')
 </body>
 </html>

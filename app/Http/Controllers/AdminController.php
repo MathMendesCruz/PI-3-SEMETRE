@@ -258,27 +258,4 @@ class AdminController extends Controller
             return back()->withInput()->with('error', 'Erro ao criar usuário: ' . $e->getMessage());
         }
     }
-
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
-
-        if (empty($query)) {
-            return redirect()->route('adm-dashboard');
-        }
-
-        // Buscar produtos
-        $products = Product::where('name', 'LIKE', "%{$query}%")
-            ->orWhere('description', 'LIKE', "%{$query}%")
-            ->orWhere('brand', 'LIKE', "%{$query}%")
-            ->orWhere('category', 'LIKE', "%{$query}%")
-            ->paginate(10);
-
-        // Buscar usuários
-        $users = User::where('name', 'LIKE', "%{$query}%")
-            ->orWhere('email', 'LIKE', "%{$query}%")
-            ->paginate(10);
-
-        return view('admin_search_results', compact('products', 'users', 'query'));
-    }
 }

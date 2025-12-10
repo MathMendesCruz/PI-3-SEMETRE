@@ -38,13 +38,12 @@
                             </p>
                         </a>
                         @if($product->stock > 0)
-                            <button class="btn-add-cart"
+                            <button class="btn btn-dark add-to-cart-btn-hover"
                                     data-product-id="{{ $product->id }}"
                                     data-product-name="{{ $product->name }}"
                                     data-product-price="{{ $product->price }}"
-                                    data-product-image="{{ asset('img/' . $product->image) }}"
-                                    onclick="event.stopPropagation(); addToCart({{ $product->id }}, 1)">
-                                <i class="fas fa-shopping-cart"></i> Adicionar
+                                    data-product-img="{{ asset('img/' . $product->image) }}">
+                                Adicionar ao Carrinho
                             </button>
                         @else
                             <span class="out-of-stock">Indisponível</span>

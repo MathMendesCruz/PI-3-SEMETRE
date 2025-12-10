@@ -38,6 +38,7 @@
                     <div class="color-filter-list" id="color-filters">
                         <button class="color-swatch" style="background-color: #fde047;" title="Ouro" data-color="ouro" aria-label="Filtro de cor Ouro"></button>
                         <button class="color-swatch" style="background-color: #d1d5db;" title="Prata" data-color="prata" aria-label="Filtro de cor Prata"></button>
+                        <button class="color-swatch" style="background-color: #1f2937;" title="Preto" data-color="preto" aria-label="Filtro de cor Preto"></button>
                     </div>
                 </div>
 
@@ -105,15 +106,6 @@
                                 </p>
                             </a>
                             @if($product->stock > 0)
-                                <button class="btn-add-cart"
-                                        data-product-id="{{ $product->id }}"
-                                        data-product-name="{{ $product->name }}"
-                                        data-product-price="{{ $product->price }}"
-                                        data-product-image="{{ asset('img/' . $product->image) }}"
-                                        onclick="event.stopPropagation(); addToCart({{ $product->id }}, 1)">
-                                    <i class="fas fa-shopping-cart"></i> Adicionar
-                                </button>
-                            @endif
                             <button class="btn btn-dark add-to-cart-btn-listing"
                                     data-product-id="{{ $product->id }}"
                                     data-product-name="{{ $product->name }}"
@@ -126,11 +118,6 @@
                         <p style="grid-column: 1 / -1; text-align: center;">Nenhum produto disponível nesta categoria.</p>
                     @endforelse
                 </div>
-
-                <div class="pagination">
-                    {{ $products->withQueryString()->links() }}
-                </div>
-            </section>
         </div>
     </main>
 
@@ -138,5 +125,5 @@
 @endsection
 
     @section('extra-scripts')
-    <script src="{{ asset('js/filters.js') }}"></script>
+    <script src="{{ asset('js/filters-api.js') }}"></script>
     @endsection

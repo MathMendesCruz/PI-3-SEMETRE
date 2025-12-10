@@ -38,6 +38,7 @@
                     <div class="color-filter-list" id="color-filters">
                         <button class="color-swatch" style="background-color: #fde047;" title="Ouro" data-color="ouro" aria-label="Filtro de cor Ouro"></button>
                         <button class="color-swatch" style="background-color: #d1d5db;" title="Prata" data-color="prata" aria-label="Filtro de cor Prata"></button>
+                        <button class="color-swatch" style="background-color: #1f2937;" title="Preto" data-color="preto" aria-label="Filtro de cor Preto"></button>
                     </div>
                 </div>
 
@@ -107,11 +108,13 @@
                                 </p>
                             </a>
                             @if($product->stock > 0)
-                                <button class="btn-add-cart"
-                                        data-product-id="{{ $product->id }}"
-                                        onclick="event.stopPropagation(); addToCart({{ $product->id }}, 1)">
-                                    <i class="fas fa-shopping-cart"></i> Adicionar
-                                </button>
+                            <button class="btn btn-dark add-to-cart-btn-listing"
+                                    data-product-id="{{ $product->id }}"
+                                    data-product-name="{{ $product->name }}"
+                                    data-product-price="{{ $product->price }}"
+                                    data-product-img="{{ asset('img/' . $product->image) }}">
+                                Adicionar ao Carrinho
+                            </button>
                             @endif
                         </div>
                     @empty
@@ -119,8 +122,15 @@
                     @endforelse
                 </div>
 
-                <div class="pagination">
-                    {{ $products->withQueryString()->links() }}
+                <div class="pagination-container" id="pagination-container" style="display: none;">
+                    <div class="pagination">
+                        <button class="pagination-btn" id="prev-page" disabled>Anterior</button>
+                        <div class="pagination-info">
+                            <span id="current-page">1</span> de <span id="total-pages">1</span>
+                        </div>
+                        <button class="pagination-btn" id="next-page">Próximo</button>
+                    </div>
+                    <p class="pagination-text"><span id="results-count">0</span> resultados encontrados</p>
                 </div>
             </section>
         </div>
@@ -130,5 +140,5 @@
 @endsection
 
 @section('extra-scripts')
-<script src="{{ asset('js/filters.js') }}"></script>
+<script src="{{ asset('js/filters-api.js') }}"></script>
 @endsection

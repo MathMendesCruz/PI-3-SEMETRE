@@ -252,7 +252,7 @@ function showNotification(message, type = 'info') {
 document.addEventListener('DOMContentLoaded', function() {
 
     // Botões "Adicionar ao Carrinho"
-    document.querySelectorAll('.add-to-cart-btn, .btn-add-cart').forEach(btn => {
+    document.querySelectorAll('.add-to-cart-btn, .add-to-cart-btn-hover, .btn-add-cart').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
 
