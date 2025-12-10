@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => 'mysql', // FORÇADO: Sempre usar MySQL em produção
 
     /*
     |--------------------------------------------------------------------------
