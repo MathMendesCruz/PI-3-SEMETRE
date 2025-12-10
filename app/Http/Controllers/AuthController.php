@@ -43,10 +43,15 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ])) {
+            $user = Auth::user();
+
+            // Redirecionar admin para dashboard, cliente para home
+            $redirect = $user->is_admin ? route('adm-dashboard') : route('index');
+
             return response()->json([
                 'success' => true,
                 'message' => 'Login realizado com sucesso!',
-                'redirect' => route('index')
+                'redirect' => $redirect
             ]);
         }
 
@@ -91,16 +96,19 @@ class AuthController extends Controller
 
         // Criar novo usuário
         try {
+            // Cadastro público sempre cria clientes (nunca admin)
+            // Apenas admins podem criar outros admins via painel administrativo
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'is_admin' => false, // Sempre criar como cliente
+                'is_admin' => false, // Sempre cliente no cadastro público
             ]);
 
             // Autenticar automaticamente
             Auth::login($user);
 
+            // Cliente sempre vai para home após cadastro
             return response()->json([
                 'success' => true,
                 'message' => 'Cadastro realizado com sucesso!',

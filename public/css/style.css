@@ -43,3 +43,4 @@
 @import 'atomic/templates/_banner.css';
 @import 'atomic/templates/_dashboard.css';
 @import 'atomic/templates/_info.css';
+@import 'atomic/templates/_responsive.css'; /* Responsividade global */
