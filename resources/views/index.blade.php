@@ -28,14 +28,28 @@
             <h2 class="section-title">Novidades</h2>
             <div class="product-grid" id="product-grid-container" data-inline-load-more="true">
                 @forelse($products->take(6) as $product)
-                    <a href="{{ route('produto', ['id' => $product->id]) }}" class="product-card" data-productid="{{ $product->id }}">
-                        <img src="{{ asset('img/' . $product->image) }}" 
-                             alt="{{ $product->name }}">
-                        <h3>{{ $product->name }}</h3>
-                        <p class="price">
-                            <span class="sale">R$ {{ number_format($product->price, 2, ',', '.') }}</span>
-                        </p>
-                    </a>
+                    <div class="product-card" data-productid="{{ $product->id }}">
+                        <a href="{{ route('produto', ['id' => $product->id]) }}" style="text-decoration: none; color: inherit;">
+                            <img src="{{ asset('img/' . $product->image) }}"
+                                 alt="{{ $product->name }}">
+                            <h3>{{ $product->name }}</h3>
+                            <p class="price">
+                                <span class="sale">R$ {{ number_format($product->price, 2, ',', '.') }}</span>
+                            </p>
+                        </a>
+                        @if($product->stock > 0)
+                            <button class="btn-add-cart"
+                                    data-product-id="{{ $product->id }}"
+                                    data-product-name="{{ $product->name }}"
+                                    data-product-price="{{ $product->price }}"
+                                    data-product-image="{{ asset('img/' . $product->image) }}"
+                                    onclick="event.stopPropagation(); addToCart({{ $product->id }}, 1)">
+                                <i class="fas fa-shopping-cart"></i> Adicionar
+                            </button>
+                        @else
+                            <span class="out-of-stock">Indisponível</span>
+                        @endif
+                    </div>
                 @empty
                     <p style="grid-column: 1 / -1; text-align: center;">Nenhum produto disponível.</p>
                 @endforelse
@@ -62,18 +76,18 @@
     document.addEventListener('DOMContentLoaded', () => {
         // ===== FILTRO DE MARCAS =====
         const brandItems = document.querySelectorAll('.brand-item');
-        
+
         brandItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const selectedBrand = item.getAttribute('data-brand');
-                
+
                 // Remover active de todos
                 brandItems.forEach(b => b.classList.remove('active'));
-                
+
                 // Adicionar active ao clicado
                 item.classList.add('active');
-                
+
                 // Redirecionar para página feminina com filtro de marca
                 window.location.href = `/feminino?brand=${selectedBrand}`;
             });
@@ -84,10 +98,10 @@
         const allProducts = @json($products);
         const productsPerPage = 6;
         let currentIndex = productsPerPage;
-        
+
         // Array de imagens disponíveis para usar como fallback
         const availableImages = ['anel1.png', 'anel2.png', 'anelverde.webp', 'colar1.png', 'colar2.png', 'relogio1.png'];
-        
+
         const loadMoreBtn = document.getElementById('load-more-btn');
         const gridContainer = document.getElementById('product-grid-container');
 
@@ -103,12 +117,12 @@
                 productLink.href = `/produto/${product.id}`;
                 productLink.className = 'product-card';
                 productLink.setAttribute('data-productid', product.id);
-                
+
                 // Usar imagem do produto ou fallback para a primeira disponível
                 const imageUrl = product.image
                     ? `{{ asset('img') }}/${product.image}`
                     : `{{ asset('img') }}/${availableImages[i % availableImages.length]}`;
-                
+
                 productLink.innerHTML = `
                     <img src="${imageUrl}" alt="${product.name}">
                     <h3>${product.name}</h3>

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNÇÕES GLOBAIS AUXILIARES ---
     const formatCurrency = (value) => {
         const numberValue = Number(value);
-        if (isNaN(numberValue)) { console.error("formatCurrency invalid value:", value); return "R$ -.--"; }
+        if (isNaN(numberValue)) { return "R$ -.--"; }
         return numberValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     };
     const generateStarsHTML = (rating) => {
@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeTopBarBtn = document.querySelector('.top-bar .close-btn');
     if (closeTopBarBtn) { closeTopBarBtn.addEventListener('click', () => { closeTopBarBtn.parentElement.style.display = 'none'; }); }
 
-    
+
     // --- NOVA LÓGICA DO CARRINHO GLOBAL (LocalStorage) ---
 
     // Pega o elemento do badge no header
-    const cartCountBadge = document.querySelector('.cart-item-count'); 
+    const cartCountBadge = document.querySelector('.cart-item-count');
 
     /**
      * Atualiza o badge do carrinho no header (o número).
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getCartFromStorage = () => {
         const cartJSON = localStorage.getItem('joalheriaCart');
         // Se não existir, retorna um array vazio
-        return cartJSON ? JSON.parse(cartJSON) : []; 
+        return cartJSON ? JSON.parse(cartJSON) : [];
     };
 
     /**
@@ -100,12 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
                 }
             }
-            
+
             cart.push(productData);
         }
 
         saveCartToStorage(cart); // Salva o carrinho atualizado
-        
+
         // Atualiza o contador no header
         const totalItems = getTotalItemsInCart();
         updateCartCounter(totalItems);
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cartCountBadge.classList.remove('pulse-animation');
             }, 300); // Duração da animação CSS
         }
-        
+
         console.log('Produto adicionado ao carrinho:', productData);
         console.log('Carrinho atual:', cart);
     };
@@ -132,16 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cartItemsElements = container.querySelectorAll('.cart-item');
         let newCart = [];
-        
+
         cartItemsElements.forEach(itemEl => {
             const id = itemEl.dataset.id || `simulated-${Math.random()}`;
             const name = itemEl.querySelector('h4')?.textContent || 'Produto Simulado';
             const price = parseFloat(itemEl.dataset.price);
             const img = itemEl.querySelector('.cart-item-img img')?.src || 'img/anel1.png';
             const quantityElement = itemEl.querySelector('.quantity-value'); // Seleciona o elemento da quantidade
-            
+
             // Verifica se o elemento da quantidade existe antes de tentar ler
-            const quantity = quantityElement ? parseInt(quantityElement.textContent) : 0; 
+            const quantity = quantityElement ? parseInt(quantityElement.textContent) : 0;
 
 
             if (!isNaN(price) && !isNaN(quantity) && quantity > 0) { // Garante quantidade válida
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         saveCartToStorage(newCart); // Salva o estado atual da página no LocalStorage
-        
+
         // Retorna o total de itens calculado desta página
         const totalItems = newCart.reduce((total, item) => total + item.quantity, 0);
         return totalItems;
@@ -193,13 +193,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Home page logic loaded."); // Debug
 
         const allProducts = [ /* ... Seu array de produtos da Home aqui ... */
-            { id: 1, name: 'Anel de Ouro', price: '2.099,90', original: null, img:'img/anel1.png', rating: 4 }, 
+            { id: 1, name: 'Anel de Ouro', price: '2.099,90', original: null, img:'img/anel1.png', rating: 4 },
             { id: 2, name: 'Colar de Ouro com Pedras', price: '2.156,50', original: '2.600,00', img:'img/colar1.png', rating: 5 },
             { id: 3, name: 'Chaveiro SUN', price: '1.980,10', original: null, img: 'img/colar3.png', rating: 3 },
             { id: 4, name: 'Blusa Striped T-shirt', price: '1.530,55', original: '2.040,00', img: 'img/colar4.png', rating: 4 },
             { id: 5, name: 'Pulseira Prata Fina', price: '899,00', original: null, img: 'img/colar1.png', rating: 5 },
-            { id: 6, name: 'Brinco Argola Ouro', price: '1.250,00', original: '1.500,00', img: 'img/colar1.png', rating: 4 }, 
-            { id: 7, name: 'Anel Solitário Brilhante', price: '3.500,00', original: null, img: 'img/colar1.png', rating: 5 }, 
+            { id: 6, name: 'Brinco Argola Ouro', price: '1.250,00', original: '1.500,00', img: 'img/colar1.png', rating: 4 },
+            { id: 7, name: 'Anel Solitário Brilhante', price: '3.500,00', original: null, img: 'img/colar1.png', rating: 5 },
             { id: 8, name: 'Corrente Masculina Grossa', price: '4.100,00', original: '4.500,00', img: 'img/colar1.png', rating: 4 },
             { id: 9, name: 'Anel Novo Modelo', price: '999,90', original: null, img: 'img/colar1.png', rating: 4 },
             { id: 10, name: 'Colar Pérolas', price: '1.150,50', original: '1.300,00', img: 'img/colar1.png', rating: 5 },
@@ -214,15 +214,15 @@ document.addEventListener('DOMContentLoaded', () => {
         function displayHomeProduct(product) {
             // Convertendo o preço para o formato numérico (ex: "2.099,90" -> 2099.90)
             const numericPrice = parseFloat(product.price.replace('.', '').replace(',', '.'));
-            
+
             const productHTML = `
                 <a href="detalhe-produto.html?id=${product.id}" class="product-card">
                     <div class="product-image-container">
                         <img src="${product.img}" alt="${product.name}">
                         ${product.original ? '<span class="badge sale-badge">Promoção</span>' : ''}
-                        
-                        <button class="btn add-to-cart-btn" 
-                                data-product-id="${product.id}" 
+
+                        <button class="btn add-to-cart-btn"
+                                data-product-id="${product.id}"
                                 data-product-name="${product.name}"
                                 data-product-price="${numericPrice}"
                                 data-product-img="${product.img}">
@@ -271,12 +271,12 @@ document.addEventListener('DOMContentLoaded', () => {
         productGridContainer.addEventListener('click', function(event) {
             if (event.target.classList.contains('add-to-cart-btn')) {
                 event.preventDefault(); // Impede a navegação do link <a>
-                
+
                 const button = event.target;
                 const productId = button.dataset.productId;
-                
-                addItemToCart(productId); 
-                
+
+                addItemToCart(productId);
+
                 // Feedback visual no botão
                 button.textContent = 'Adicionado!';
                 button.classList.add('added');
@@ -312,14 +312,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const calculateShippingBtn = cartPage.querySelector('#calculate-shipping-btn');
         const shippingMessageEl = cartPage.querySelector('#shipping-message');
         // ===================================
-        
-        
+
+
         // --- ADIÇÃO NA PÁGINA DO CARRINHO ---
         // Função para popular o carrinho com dados do LocalStorage
         const populateCartFromStorage = () => {
             if (!cartItemsContainer) { // Verifica se o container existe
                 console.error("Cart items container not found for population.");
-                return; 
+                return;
             }
             const cart = getCartFromStorage();
             if (cart.length === 0) {
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // --- Função updateCartTotals (MODIFICADA/SUBSTITUÍDA) ---
-        const updateCartTotals = () => { 
+        const updateCartTotals = () => {
             let subtotal = 0;
             const totalItems = updateStorageFromPage(cartItemsContainer); // Já salva no storage
             const cartItems = cartItemsContainer ? cartItemsContainer.querySelectorAll('.cart-item') : [];
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Tenta converter o texto (ex: "R$ 18,90") de volta para número
                 const formattedValue = shippingValueEl.textContent;
                 // Remove "R$", espaço, troca vírgula por ponto
-                const numericString = formattedValue.replace('R$', '').trim().replace('.', '').replace(',', '.'); 
+                const numericString = formattedValue.replace('R$', '').trim().replace('.', '').replace(',', '.');
                 currentShippingCost = parseFloat(numericString);
                 if (isNaN(currentShippingCost)) {
                     currentShippingCost = 0; // Fallback se a conversão falhar
@@ -399,16 +399,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
                 // Aplica frete apenas se houver subtotal
-            const shipping = (subtotal > 0) ? currentShippingCost : 0; 
+            const shipping = (subtotal > 0) ? currentShippingCost : 0;
             // ==================================================
-            
+
             const total = subtotal - discount + shipping;
 
             // Atualiza o HTML do resumo
             if(subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
             if(discountEl) discountEl.textContent = `-${formatCurrency(discount)}`;
             // Atualiza o frete apenas se ele foi calculado (não sobrescreve o '--')
-            if (shippingValueEl && shipping !== 0) { 
+            if (shippingValueEl && shipping !== 0) {
                 // Não precisa atualizar aqui, pois o cálculo do frete já atualiza
             } else if (shippingValueEl && subtotal === 0) {
                 shippingValueEl.textContent = formatCurrency(0); // Zera frete se carrinho vazio
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const quantityElement = cartItem.querySelector('.quantity-value');
                 if (!quantityElement) return; // Sai se não encontrar o elemento
-                
+
                 let quantity = parseInt(quantityElement.textContent);
 
                 if (target.classList.contains('increase-qty')) {
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // === NOVO LISTENER: CALCULAR FRETE (SIMULAÇÃO) (INJETADO) ===
         if (cepForm && cepInput && calculateShippingBtn && shippingValueEl && shippingMessageEl) {
-            
+
             // Opcional: Máscara simples para CEP (#####-###)
             cepInput.addEventListener('input', (e) => {
                 let value = e.target.value.replace(/\D/g, ''); // Remove não dígitos
@@ -513,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     // Simula um valor de frete (ex: fixo ou aleatório)
                     const simulatedShippingCost = 18.90; // Ou Math.random() * 20 + 10;
-                    
+
                     shippingValueEl.textContent = formatCurrency(simulatedShippingCost);
                     shippingMessageEl.textContent = `Frete calculado para ${cepInput.value}.`; // Mensagem de sucesso (opcional)
                     shippingMessageEl.className = 'shipping-message success'; // (opcional)
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cepInput.disabled = false;
 
                     // IMPORTANTE: Recalcula os totais APÓS atualizar o frete
-                    updateCartTotals(); 
+                    updateCartTotals();
 
                 }, 1500); // Simula 1.5 segundos de espera
             });
@@ -546,45 +546,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (productPage) { // Verifica se é a página de detalhe
         console.log("Product detail page logic loaded.");
-        
+
         // Galeria
         const mainImage = productPage.querySelector('.main-image img');
         const thumbnails = productPage.querySelectorAll('.thumbnail-images img');
-        if (mainImage && thumbnails.length > 0) { 
-            thumbnails.forEach(thumb => { 
-                thumb.addEventListener('click', () => { 
-                    mainImage.src = thumb.src; 
-                }); 
-            }); 
+        if (mainImage && thumbnails.length > 0) {
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    mainImage.src = thumb.src;
+                });
+            });
         }
-        
+
         // Tabs
         const tabLinks = document.querySelectorAll('.tabs-nav .tab-link');
         const tabPanes = document.querySelectorAll('.tabs-content .tab-pane');
         if (tabLinks.length > 0 && tabPanes.length > 0) {
-            tabLinks.forEach(link => { 
-                link.addEventListener('click', () => { 
+            tabLinks.forEach(link => {
+                link.addEventListener('click', () => {
                     const targetTab = link.dataset.tab;
                     tabLinks.forEach(l => l.classList.remove('active'));
                     tabPanes.forEach(p => p.classList.remove('active'));
                     link.classList.add('active');
                     document.getElementById(targetTab)?.classList.add('active');
-                }); 
+                });
             });
         }
-        
+
         // Quantity selector
         const qtyValue = productPage.querySelector('.quantity-value');
         const qtyPlus = productPage.querySelector('.qty-plus');
         const qtyMinus = productPage.querySelector('.qty-minus');
-        
+
         if (qtyValue && qtyPlus && qtyMinus) {
             qtyPlus.addEventListener('click', (e) => {
                 e.preventDefault();
                 let current = parseInt(qtyValue.textContent);
                 qtyValue.textContent = current + 1;
             });
-            
+
             qtyMinus.addEventListener('click', (e) => {
                 e.preventDefault();
                 let current = parseInt(qtyValue.textContent);
@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-        
+
         // Add to cart button na página de detalhe
         const addToCartBtnDetail = productPage.querySelector('.add-to-cart-btn');
         if (addToCartBtnDetail) {
@@ -601,9 +601,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const productId = addToCartBtnDetail.dataset.productId;
                 const quantity = parseInt(qtyValue?.textContent || '1');
-                
+
                 console.log(`Adicionando ${quantity}x produto ${productId} ao carrinho`);
-                
+
                 // Adiciona a quantidade especificada
                 for (let i = 0; i < quantity; i++) {
                     addItemToCart(productId);
@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeCommentBtn = document.getElementById('close-comment-modal');
         const commentForm = document.getElementById('comment-form');
         const commentsGrid = document.querySelector('.comments-grid');
-        
+
         if (openCommentBtn && commentModalOverlay) {
             openCommentBtn.addEventListener('click', () => {
                 commentModalOverlay.style.display = 'flex';
@@ -634,19 +634,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 commentModalOverlay.style.justifyContent = 'center';
             });
         }
-        
+
         if (closeCommentBtn && commentModalOverlay) {
             closeCommentBtn.addEventListener('click', () => {
                 commentModalOverlay.style.display = 'none';
             });
-            
+
             commentModalOverlay.addEventListener('click', (e) => {
                 if (e.target === commentModalOverlay) {
                     commentModalOverlay.style.display = 'none';
                 }
             });
         }
-        
+
         // Star rating selection
         let selectedRating = 0;
         const starRatings = document.querySelectorAll('.star-rating');
@@ -660,26 +660,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         });
-        
+
         // Comment form submission
         if (commentForm && commentsGrid) {
             commentForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
+
                 const name = document.getElementById('comment-name').value;
                 const text = document.getElementById('comment-text').value;
-                
+
                 if (!selectedRating) {
                     alert('Por favor, selecione uma avaliação');
                     return;
                 }
-                
+
                 // Generate stars HTML
                 let starsHTML = '';
                 for (let i = 0; i < 5; i++) {
                     starsHTML += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="' + (i < selectedRating ? 'currentColor' : 'none') + '" stroke="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>';
                 }
-                
+
                 const newComment = document.createElement('div');
                 newComment.className = 'comment-card';
                 newComment.innerHTML = `
@@ -691,15 +691,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="comment-body">"${text}"</p>
                     <p class="comment-date">Postado em ${new Date().toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 `;
-                
+
                 commentsGrid.insertBefore(newComment, commentsGrid.firstChild);
-                
+
                 // Reset form
                 commentForm.reset();
                 selectedRating = 0;
                 starRatings.forEach(s => s.style.opacity = '1');
                 commentModalOverlay.style.display = 'none';
-                
+
                 alert('Comentário adicionado com sucesso!');
             });
         }
@@ -709,9 +709,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (relatedProductsGrid) {
             console.log("Loading related products..."); // Debug
             const relatedProducts = [
-                { id: 13, name: 'Polo with Contrast Trims', price: '2.142,25', original: '2.424,57', img: 'img/anel1.png', rating: 4 }, 
+                { id: 13, name: 'Polo with Contrast Trims', price: '2.142,25', original: '2.424,57', img: 'img/anel1.png', rating: 4 },
                 { id: 14, name: 'Gradient Graphic T-shirt', price: '145,59', original: null, img: 'img/anel2.png', rating: 5 },
-                { id: 15, name: 'Polo with Tigging Detalis', price: '1805,56', original: null, img: 'img/colar1.png', rating: 3 }, 
+                { id: 15, name: 'Polo with Tigging Detalis', price: '1805,56', original: null, img: 'img/colar1.png', rating: 3 },
                 { id: 16, name: 'Black Striped T-shirt', price: '1.200,00', original: '1.580,25', img: 'img/anel2.png', rating: 4 }
             ];
             function displayRelatedProduct(product) {
@@ -721,8 +721,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="product-image-container">
                             <img src="${product.img}" alt="${product.name}">
                             ${product.original ? '<span class="badge sale-badge">Sale</span>' : ''}
-                            
-                            <button class="btn add-to-cart-btn" 
+
+                            <button class="btn add-to-cart-btn"
                                     data-product-id="${product.id}"
                                     data-product-name="${product.name}"
                                     data-product-price="${numericPrice}"
@@ -744,12 +744,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             relatedProductsGrid.addEventListener('click', function(event) {
                 if (event.target.classList.contains('add-to-cart-btn')) {
-                    event.preventDefault(); 
+                    event.preventDefault();
                     const button = event.target;
                     const productId = button.dataset.productId;
-                    
+
                     addItemToCart(productId); // Chama a função global
-                    
+
                     button.textContent = 'Adicionado!';
                     button.classList.add('added');
                     setTimeout(() => {
@@ -839,7 +839,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Função para recalcular os totais NA PÁGINA DE CHECKOUT
         const updateCheckoutTotals = () => {
             let subtotal = 0;
-            
+
             // --- MUDANÇA AQUI ---
             // Salva o estado atual da página no LocalStorage E obtém o total de itens
             const totalItems = updateStorageFromPage(checkoutItemsContainer);
@@ -847,23 +847,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const checkoutItems = checkoutItemsContainer ? checkoutItemsContainer.querySelectorAll('.cart-item') : [];
             checkoutItems.forEach(item => {
-                const price = parseFloat(item.dataset.price); 
+                const price = parseFloat(item.dataset.price);
                 const quantityElement = item.querySelector('.quantity-value');
                 const quantity = quantityElement ? parseInt(quantityElement.textContent) : 0;
                 if (!isNaN(price) && !isNaN(quantity) && quantity > 0) { subtotal += price * quantity; }
             });
-            
-            const discount = (getCartFromStorage().length > 0) ? subtotal * 0.20 : 0; 
+
+            const discount = (getCartFromStorage().length > 0) ? subtotal * 0.20 : 0;
             if(discountLabelCheckout) discountLabelCheckout.textContent = "Desconto (-20%)";
-            
+
             const shipping = (subtotal > 0) ? 15.99 : 0;
             const total = subtotal - discount + shipping;
-            
+
             if(subtotalElCheckout) subtotalElCheckout.textContent = formatCurrency(subtotal);
             if(discountElCheckout) discountElCheckout.textContent = `-${formatCurrency(discount)}`;
             if(shippingElCheckout) shippingElCheckout.textContent = formatCurrency(shipping);
             if(totalElCheckout) totalElCheckout.textContent = formatCurrency(total);
-            
+
             updateCartCounter(totalItems); // Atualiza header
 
             if (totalItems === 0) {
@@ -877,15 +877,15 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutItemsContainer.addEventListener('click', (event) => {
                 const target = event.target; const cartItem = target.closest('.cart-item');
                 if (!cartItem) return;
-                const quantityElement = cartItem.querySelector('.quantity-value'); 
+                const quantityElement = cartItem.querySelector('.quantity-value');
                 if (!quantityElement) return;
-                
+
                 let quantity = parseInt(quantityElement.textContent);
                 if (target.classList.contains('increase-qty')) { quantity++; quantityElement.textContent = quantity; updateCheckoutTotals(); }
                 if (target.classList.contains('decrease-qty')) { if (quantity > 1) { quantity--; quantityElement.textContent = quantity; updateCheckoutTotals(); } }
                 if (target.closest('.delete-item-btn')) { cartItem.remove(); updateCheckoutTotals(); }
             });
-            
+
             // --- MUDANÇA AQUI ---
             // Cálculo inicial para a página de checkout
             populateCheckoutFromStorage(); // 1. Popula
@@ -919,8 +919,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         timerDisplay.textContent = "0:00";
                         alert("Seu tempo para pagamento esgotou! Você será redirecionado para o carrinho.");
                         if(paymentForm) paymentForm.querySelector('button[type="submit"]').disabled = true;
-                        
-                        window.location.href = 'carrinho.html'; 
+
+                        window.location.href = 'carrinho.html';
                     }
                 }, 1000);
             }
@@ -934,13 +934,13 @@ document.addEventListener('DOMContentLoaded', () => {
             paymentForm.addEventListener('submit', (event) => {
                 event.preventDefault();
                 console.log("Payment form submitted!");
-                
+
                 // Para o timer
-                if (timerInterval) { 
-                    clearInterval(timerInterval); 
-                    console.log("Timer stopped on payment submission."); 
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    console.log("Timer stopped on payment submission.");
                 }
-                
+
                 // Captura dados do pedido antes de limpar
                 const cart = getCartFromStorage();
                 const orderSummary = {
@@ -952,23 +952,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     date: new Date().toLocaleString('pt-BR'),
                     orderNumber: '#' + Math.random().toString(36).substr(2, 9).toUpperCase()
                 };
-                
+
                 console.log('Pedido realizado:', orderSummary);
-                
+
                 // Limpa carrinho
-                saveCartToStorage([]); 
+                saveCartToStorage([]);
                 updateCartCounter(0);
 
                 // Mostra modal de sucesso
                 overlay.classList.add('active');
                 modal.classList.add('active');
-                
+
                 // Atualiza texto do modal
                 const modalTitle = modal.querySelector('h3');
                 if (modalTitle) {
                     modalTitle.innerHTML = `Compra realizada com sucesso!<br><small style="font-size: 0.8em; font-weight: normal;">Pedido ${orderSummary.orderNumber}</small>`;
                 }
-                
+
                 setTimeout(() => {
                     overlay.classList.remove('active');
                     modal.classList.remove('active');
@@ -1116,23 +1116,23 @@ document.addEventListener('DOMContentLoaded', () => {
             priceValueDisplay.textContent = formatSliderPrice(priceSlider.value);
         }
         applyFilterVisibility();
-        
+
         // Event listener para botões de adicionar ao carrinho nas listagens
         if (listingGrid) {
             listingGrid.addEventListener('click', (e) => {
                 if (e.target.classList.contains('add-to-cart-btn-listing')) {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     const btn = e.target;
                     const productId = btn.dataset.productId;
-                    
+
                     addItemToCart(productId);
-                    
+
                     const originalText = btn.textContent;
                     btn.textContent = 'Adicionado!';
                     btn.style.background = 'var(--color-verified-green)';
-                    
+
                     setTimeout(() => {
                         btn.textContent = originalText;
                         btn.style.background = '';
@@ -1176,11 +1176,11 @@ document.addEventListener('DOMContentLoaded', () => {
             adminTabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
                     // Não previne o default aqui, pois queremos navegar entre páginas HTML estáticas
-                    // e.preventDefault(); 
-                    
+                    // e.preventDefault();
+
                     // Apenas para efeito visual se ficasse na mesma página (não necessário agora)
                     // adminTabs.forEach(t => t.classList.remove('active'));
-                    // tab.classList.add('active'); 
+                    // tab.classList.add('active');
                 });
             });
             // Garante que a aba correta já tem a classe 'active' no HTML carregado
@@ -1218,14 +1218,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Funcionalidade Dropdown Filtros (Exemplo Simples) ---
         const filterButton = adminArea.querySelector('.admin-action-bar .dropdown-toggle');
         // Você precisaria de um elemento para ser o dropdown menu, ex: <div class="dropdown-menu">...</div>
-        // const filterDropdown = adminArea.querySelector('.filter-dropdown-menu'); 
+        // const filterDropdown = adminArea.querySelector('.filter-dropdown-menu');
 
         if (filterButton /*&& filterDropdown*/) {
             filterButton.addEventListener('click', () => {
                 // filterDropdown.classList.toggle('show'); // Alterna a visibilidade do menu
                 console.log("Botão de filtro clicado! (Dropdown menu não implementado no HTML)"); // Placeholder
             });
-            
+
             // Opcional: Fechar dropdown se clicar fora dele
             // document.addEventListener('click', (event) => {
             //     if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {

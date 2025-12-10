@@ -26,13 +26,13 @@
 
                <div class="filter-group">
                     <h3 class="filter-title">Preço</h3>
-                    <input type="range" class="price-slider" id="price-slider-input" min="0" max="10000" value="10000" step="100"> 
+                    <input type="range" class="price-slider" id="price-slider-input" min="0" max="10000" value="10000" step="100">
                     <div class="price-range">
-                        <span>R$0</span> 
-                        <span id="price-slider-value">R$10000</span> 
+                        <span>R$0</span>
+                        <span id="price-slider-value">R$10000</span>
                     </div>
                 </div>
-                
+
                 <div class="filter-group">
                     <h3 class="filter-title">Cor</h3>
                     <div class="color-filter-list" id="color-filters">
@@ -89,16 +89,32 @@
                         @endphp
                         <div class="product-card" data-productid="{{ $product->id }}" data-price="{{ $product->price }}" data-color="{{ $product->color ?? 'neutro' }}" data-type="{{ $type }}" data-brand="{{ $product->brand }}">
                             <a href="{{ route('produto', ['id' => $product->id]) }}" class="product-card-link">
-                                <img src="{{ asset('img/' . $product->image) }}" 
+                                <img src="{{ asset('img/' . $product->image) }}"
                                      alt="{{ $product->name }}"
                                      onerror="this.src='{{ asset('img/placeholder.svg') }}'">
                                 <h3>{{ $product->name }}</h3>
                                 <p class="price">
                                     <span class="sale">R$ {{ number_format($product->price, 2, ',', '.') }}</span>
                                 </p>
-                                <p class="stock">Estoque: {{ $product->stock }}</p>
+                                <p class="stock">
+                                    @if($product->stock > 0)
+                                        Estoque: {{ $product->stock }}
+                                    @else
+                                        <span style="color: #dc3545;">Indisponível</span>
+                                    @endif
+                                </p>
                             </a>
-                            <button class="btn btn-dark add-to-cart-btn-listing" 
+                            @if($product->stock > 0)
+                                <button class="btn-add-cart"
+                                        data-product-id="{{ $product->id }}"
+                                        data-product-name="{{ $product->name }}"
+                                        data-product-price="{{ $product->price }}"
+                                        data-product-image="{{ asset('img/' . $product->image) }}"
+                                        onclick="event.stopPropagation(); addToCart({{ $product->id }}, 1)">
+                                    <i class="fas fa-shopping-cart"></i> Adicionar
+                                </button>
+                            @endif
+                            <button class="btn btn-dark add-to-cart-btn-listing"
                                     data-product-id="{{ $product->id }}"
                                     data-product-name="{{ $product->name }}"
                                     data-product-price="{{ $product->price }}"

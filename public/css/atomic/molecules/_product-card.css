@@ -1,63 +1,103 @@
 /* css/atomic/molecules/_product-card.css */
 
+/* Product Card - Unified Styles */
 .product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
-  position: relative; /* Necessário para posicionar elementos filhos absolutos */
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 /* Container da Imagem */
 .product-image-container {
-  position: relative; /* Para o botão e badge */
-  overflow: hidden; /* Para o efeito de zoom */
+  position: relative;
+  overflow: hidden;
   background-color: var(--color-background-light);
 }
 
 .product-card img {
   width: 100%;
+  height: 250px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  transition: transform 0.4s ease; /* Transição suave para o zoom */
+  transition: transform 0.4s ease;
   background-color: #f5f5f5;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0;
 }
 
 /* Efeito Hover: Zoom na Imagem */
 .product-card:hover img {
-  transform: scale(1.05); /* Aumenta ligeiramente a imagem */
+  transform: scale(1.05);
 }
 
 /* Badge (Ex: Promoção) */
 .badge {
   position: absolute;
-  top: var(--space-md);
-  left: var(--space-md);
-  background-color: var(--color-primary); /* Cor da barra superior */
+  top: var(--space-md, 12px);
+  left: var(--space-md, 12px);
+  background-color: var(--color-primary, #c9a55c);
   color: var(--color-dark);
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xs, 6px) var(--space-sm, 10px);
   font-size: 12px;
   font-weight: 600;
   border-radius: 4px;
   text-transform: uppercase;
   z-index: 2;
 }
-/* Ocultar badge se não houver promoção (pode ser controlado via JS ou removendo a classe no HTML) */
-.product-card:not(:has(.original)) .badge.sale-badge { /* Esconde se não tiver preço original - requer suporte do navegador */
- /* display: none; */ /* Alternativa mais simples: remover a tag span no HTML se não for promoção */
+
+/* Product Info */
+.product-card h3 {
+  padding: 0.75rem 1rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 3em;
+  margin: 0;
 }
 
+.product-card .price {
+  padding: 0 1rem 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-dark);
+}
 
-/* Botão Adicionar ao Carrinho (Hover) */
-.add-to-cart-btn {
-  position: absolute;
-  bottom: var(--space-md);
-  left: 50%;
-  transform: translateX(-50%);
+.product-card .stock {
+  padding: 0 1rem 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Botão Adicionar ao Carrinho */
+.add-to-cart-btn,
+.add-to-cart-btn-listing {
+  margin: 0 1rem 0.75rem;
+  padding: 0.75rem;
   background-color: var(--color-dark);
-  color: var(--color-white);
-  padding: 10px 20px;
-  border-radius: 20px;
+  color: var(--color-white, white);
+  border: none;
+  border-radius: 6px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
   white-space: nowrap; /* Impede que o texto quebre */
   z-index: 3;
 

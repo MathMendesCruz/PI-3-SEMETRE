@@ -5,19 +5,23 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ReviewController;
 
 // Rotas Públicas
 Route::get('/', [ProductController::class, 'index'])->name('index');
 Route::get('/feminino', [ProductController::class, 'feminino'])->name('feminino');
 Route::get('/masculino', [ProductController::class, 'masculino'])->name('masculino');
 Route::get('/produto/{id?}', [ProductController::class, 'show'])->name('produto');
+Route::get('/pesquisa', [ProductController::class, 'search'])->name('search');
 
 // Rotas de Autenticação
 Route::controller(AuthController::class)->middleware('guest')->group(function () {
     Route::get('/login', 'showLogin')->name('login');
     Route::post('/login', 'login')->name('login.store');
-    
+
     Route::get('/cadastro', 'showRegister')->name('cadastro');
     Route::post('/cadastro', 'register')->name('cadastro.store');
 });
@@ -38,16 +42,45 @@ Route::middleware('auth')->group(function () {
         return view('pagamento');
     })->name('pagamento');
 
+    Route::get('/checkout', function () {
+        $cart = session()->get('cart', []);
+        $coupon = session()->get('coupon');
+        return view('checkout', compact('cart', 'coupon'));
+    })->name('checkout');
+
     Route::get('/carrinho', function () {
-        return view('carrinho');
+        $cart = session()->get('cart', []);
+        $coupon = session()->get('coupon');
+        return view('carrinho', compact('cart', 'coupon'));
     })->name('carrinho');
+
+    // Rotas de Carrinho
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+    Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
+    Route::post('/cart/validate-cep', [CartController::class, 'validateCep'])->name('cart.validateCep');
+
+    // Rotas de Pedidos
+    Route::get('/pedidos', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/pedidos/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/pedidos', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/pedido-sucesso', [OrderController::class, 'success'])->name('order.success');
+
+    // Rotas de Reviews
+    Route::post('/produtos/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+    // Perfil do usuário
+    Route::get('/perfil', [AuthController::class, 'profile'])->name('profile');
+    Route::put('/perfil', [AuthController::class, 'updateProfile'])->name('profile.update');
 });
 
-// Rotas Admin (Protegidas por autenticação)
-Route::prefix('adm')->middleware('auth')->name('adm-')->group(function () {
+// Rotas Admin (Protegidas por autenticação e middleware admin)
+Route::prefix('adm')->middleware(['auth', 'admin'])->name('adm-')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/search', [AdminController::class, 'search'])->name('search');
-    
+
     // Produtos
     Route::get('/produtos', [AdminController::class, 'products'])->name('produto');
     Route::get('/produtos/criar', [AdminController::class, 'createProduct'])->name('produto-criar');
@@ -55,32 +88,42 @@ Route::prefix('adm')->middleware('auth')->name('adm-')->group(function () {
     Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduct'])->name('produto-editar');
     Route::put('/produtos/{id}', [AdminController::class, 'updateProduct'])->name('produto-update');
     Route::delete('/produtos/{id}', [AdminController::class, 'deleteProduct'])->name('produto-delete');
-    
+
     // Usuários
     Route::get('/usuarios', [AdminController::class, 'users'])->name('usuarios');
     Route::get('/usuarios/{id}/editar', [AdminController::class, 'editUser'])->name('usuarios-editar');
     Route::put('/usuarios/{id}', [AdminController::class, 'updateUser'])->name('usuarios-update');
     Route::delete('/usuarios/{id}', [AdminController::class, 'deleteUser'])->name('usuarios-delete');
-    
-    // Criar novo admin (protegido - apenas admins)
-    Route::middleware('admin')->group(function () {
-        Route::get('/usuarios/criar', [AdminController::class, 'createAdmin'])->name('usuarios-criar');
-        Route::post('/usuarios', [AdminController::class, 'storeAdmin'])->name('usuarios-store');
-    });
+
+    // Criar novo usuário/admin
+    Route::get('/usuarios/criar', [AdminController::class, 'createAdmin'])->name('usuarios-criar');
+    Route::post('/usuarios', [AdminController::class, 'storeAdmin'])->name('usuarios-store');
+
+    // Cupons
+    Route::get('/cupons', [CouponController::class, 'index'])->name('coupons');
+    Route::get('/cupons/criar', [CouponController::class, 'create'])->name('coupons.create');
+    Route::post('/cupons', [CouponController::class, 'store'])->name('coupons.store');
+    Route::get('/cupons/{id}/editar', [CouponController::class, 'edit'])->name('coupons.edit');
+    Route::put('/cupons/{id}', [CouponController::class, 'update'])->name('coupons.update');
+    Route::delete('/cupons/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+
+    // Reviews
+    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
+    Route::post('/reviews/{id}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');
+    Route::delete('/reviews/{id}', [ReviewController::class, 'reject'])->name('reviews.reject');
 });
 
 // Manter rotas antigas para compatibilidade (nomes de rota antigos)
-Route::get('/adm-dashboard', [AdminController::class, 'dashboard'])->middleware('auth')->name('adm-dashboard');
-Route::get('/adm-produto', [AdminController::class, 'products'])->middleware('auth')->name('adm-produto');
-Route::get('/adm-usuarios', [AdminController::class, 'users'])->middleware('auth')->name('adm-usuarios');
-Route::get('/adm-cadastro', [AdminController::class, 'createProduct'])->middleware('auth')->name('adm-cadastro');
-Route::get('/adm-produto-editar/{id}', [AdminController::class, 'editProduct'])->middleware('auth')->name('adm-produto-editar');
-Route::put('/adm-produto-update/{id}', [AdminController::class, 'updateProduct'])->middleware('auth')->name('adm-produto-update');
-Route::get('/adm-usuarios-editar/{id}', [AdminController::class, 'editUser'])->middleware('auth')->name('adm-usuarios-editar');
-Route::put('/adm-usuarios-update/{id}', [AdminController::class, 'updateUser'])->middleware('auth')->name('adm-usuarios-update');
+Route::get('/adm-produto', [AdminController::class, 'products'])->middleware(['auth', 'admin'])->name('adm-produto');
+Route::get('/adm-usuarios', [AdminController::class, 'users'])->middleware(['auth', 'admin'])->name('adm-usuarios');
+Route::get('/adm-cadastro', [AdminController::class, 'createProduct'])->middleware(['auth', 'admin'])->name('adm-cadastro');
+Route::get('/adm-produto-editar/{id}', [AdminController::class, 'editProduct'])->middleware(['auth', 'admin'])->name('adm-produto-editar');
+Route::put('/adm-produto-update/{id}', [AdminController::class, 'updateProduct'])->middleware(['auth', 'admin'])->name('adm-produto-update');
+Route::get('/adm-usuarios-editar/{id}', [AdminController::class, 'editUser'])->middleware(['auth', 'admin'])->name('adm-usuarios-editar');
+Route::put('/adm-usuarios-update/{id}', [AdminController::class, 'updateUser'])->middleware(['auth', 'admin'])->name('adm-usuarios-update');
 Route::get('/adm-usuarios-criar', [AdminController::class, 'createAdmin'])->middleware(['auth', 'admin'])->name('adm-usuarios-criar');
 Route::post('/adm-usuarios-store', [AdminController::class, 'storeAdmin'])->middleware(['auth', 'admin'])->name('adm-usuarios-store');
-Route::delete('/adm-usuarios-delete/{id}', [AdminController::class, 'deleteUser'])->middleware('auth')->name('adm-usuarios-delete');
+Route::delete('/adm-usuarios-delete/{id}', [AdminController::class, 'deleteUser'])->middleware(['auth', 'admin'])->name('adm-usuarios-delete');
 
 // Rotas de Informação
 Route::get('/sobre', function () {

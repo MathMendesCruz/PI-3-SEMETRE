@@ -95,6 +95,7 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'is_admin' => false, // Sempre criar como cliente
             ]);
 
             // Autenticar automaticamente
@@ -120,5 +121,49 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('index')->with('success', 'Desconectado com sucesso!');
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        $orders = $user->orders()->orderBy('created_at', 'desc')->take(5)->get();
+        return view('profile', compact('user', 'orders'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:3|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'current_password' => 'nullable|required_with:password',
+            'password' => 'nullable|min:6|confirmed',
+        ], [
+            'name.required' => 'Nome é obrigatório',
+            'email.required' => 'Email é obrigatório',
+            'email.unique' => 'Este email já está em uso',
+            'current_password.required_with' => 'Senha atual é obrigatória para alterar a senha',
+            'password.min' => 'Nova senha deve ter no mínimo 6 caracteres',
+            'password.confirmed' => 'Senhas não conferem',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // Verificar senha atual se estiver tentando mudar a senha
+        if ($request->filled('password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Senha atual incorreta'])->withInput();
+            }
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return back()->with('success', 'Perfil atualizado com sucesso!');
     }
 }

@@ -64,17 +64,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== COR =====
     if (colorFilters) {
-        const colorSwatches = colorFilters.querySelectorAll('.color-swatch');
+        const colorSwatches = colorFilters.querySelectorAll('.color-swatch, button[data-color]');
         colorSwatches.forEach(swatch => {
             swatch.addEventListener('click', (e) => {
                 e.preventDefault();
                 const chosen = swatch.getAttribute('data-color');
                 if (filterState.color === chosen) {
                     filterState.color = null;
-                    colorSwatches.forEach(s => s.classList.remove('selected'));
+                    colorSwatches.forEach(s => {
+                        s.classList.remove('selected');
+                        s.style.border = '';
+                        s.style.boxShadow = '';
+                    });
                 } else {
-                    colorSwatches.forEach(s => s.classList.remove('selected'));
+                    colorSwatches.forEach(s => {
+                        s.classList.remove('selected');
+                        s.style.border = '';
+                        s.style.boxShadow = '';
+                    });
                     swatch.classList.add('selected');
+                    swatch.style.border = '3px solid #c9a55c';
+                    swatch.style.boxShadow = '0 0 8px rgba(201, 165, 92, 0.5)';
                     filterState.color = chosen;
                 }
                 filterState.currentPage = 1;
@@ -93,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyFilters() {
         captureAllProducts();
-        
+
         // Filtrar produtos baseado no estado
         const filtered = allProducts.filter(p => {
             let show = true;
@@ -124,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             emptyMsg.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 40px; color: #999; font-size: 16px;';
             emptyMsg.textContent = 'Nenhum produto encontrado com os filtros selecionados.';
             productListing.appendChild(emptyMsg);
-            
+
             // Atualizar contador
             const counter = document.getElementById('filter-counter');
             if (counter) {
@@ -147,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalCount = filtered.length;
         const startCount = startIdx + 1;
         const endCount = Math.min(endIdx, totalCount);
-        
+
         const counter = document.getElementById('filter-counter');
         if (counter) {
             counter.textContent = `Exibindo ${startCount}-${endCount} de ${totalCount} Produto(s)`;

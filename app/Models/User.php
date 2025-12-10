@@ -28,6 +28,27 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function hasOrderedProduct($productId)
+    {
+        return $this->orders()
+            ->where('status', 'completed')
+            ->whereHas('items', function($query) use ($productId) {
+                $query->where('product_id', $productId);
+            })
+            ->exists();
     }
 }

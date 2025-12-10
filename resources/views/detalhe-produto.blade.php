@@ -3,7 +3,7 @@
 @section('title', 'Detalhes do Produto - Elegance Joias')
 
 @section('content')
-    
+
     <div class="container">
         <button class="btn-back" data-history-back style="margin-bottom: 15px;">Voltar</button>
         <nav class="breadcrumb">
@@ -17,12 +17,12 @@
         <section class="product-details-layout">
             <div class="product-gallery">
                 <div class="main-image">
-                    <img src="{{ asset('img/' . $product->image) }}" 
+                    <img src="{{ asset('img/' . $product->image) }}"
                          alt="{{ $product->name }}"
                          onerror="this.src='{{ asset('img/placeholder.svg') }}'">
                 </div>
                 <div class="thumbnail-images">
-                    <img src="{{ asset('img/' . $product->image) }}" 
+                    <img src="{{ asset('img/' . $product->image) }}"
                          alt="{{ $product->name }}"
                          onerror="this.src='{{ asset('img/placeholder.svg') }}'">
                 </div>
@@ -61,17 +61,24 @@
                 </div>
                 <div class="controls">
                     <div class="quantity-selector">
-                        <button class="qty-btn qty-minus">-</button>
+                        <button class="qty-btn qty-minus" type="button">-</button>
                         <span class="quantity-value">1</span>
-                        <button class="qty-btn qty-plus">+</button>
+                        <button class="qty-btn qty-plus" type="button">+</button>
                     </div>
-                    <button class="btn btn-dark add-to-cart-btn" 
-                            data-product-id="{{ $product->id }}"
-                            data-product-name="{{ $product->name }}"
-                            data-product-price="{{ $product->price }}"
-                            data-product-img="{{ asset('img/' . $product->image) }}">
-                        Adicionar ao carrinho
-                    </button>
+                    @if($product->stock > 0)
+                        <button class="btn btn-dark add-to-cart-btn"
+                                type="button"
+                                onclick="addToCart({{ $product->id }}, parseInt(document.querySelector('.quantity-value').textContent))">
+                            <i class="fas fa-shopping-cart"></i> Adicionar ao carrinho
+                        </button>
+                    @else
+                        <button class="btn btn-dark"
+                                type="button"
+                                disabled
+                                style="opacity: 0.6; cursor: not-allowed;">
+                            Indisponível
+                        </button>
+                    @endif
                 </div>
             </div>
         </section>
@@ -116,7 +123,7 @@
         </section>
 
         <section class="container related-products-section"> <h2 class="section-title">Destaques para você</h2>
-            <div class="product-grid" id="related-products-grid"> 
+            <div class="product-grid" id="related-products-grid">
                 </div>
         </section>
 

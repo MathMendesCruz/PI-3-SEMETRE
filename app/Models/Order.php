@@ -14,16 +14,21 @@ class Order extends Model
         'user_id',
         'subtotal',
         'discount',
+        'discount_amount',
         'shipping',
         'total',
         'status',
         'payment_method',
         'customer_notes',
+        'shipping_address',
+        'postal_code',
+        'coupon_code',
     ];
 
     protected $casts = [
         'subtotal' => 'decimal:2',
         'discount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
         'shipping' => 'decimal:2',
         'total' => 'decimal:2',
     ];
@@ -36,6 +41,11 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 
     public static function generateOrderNumber()

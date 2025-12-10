@@ -12,10 +12,12 @@ class AdminController extends Controller
     public function dashboard()
     {
         $totalProducts = Product::count();
-        $totalUsers = User::count();
-        $lowStockProducts = Product::where('stock', '<', 5)->count();
-        
-        return view('admin_dashboard', compact('totalProducts', 'totalUsers', 'lowStockProducts'));
+        $totalUsers = User::where('is_admin', false)->count();
+        $totalAdmins = User::where('is_admin', true)->count();
+        $lowStockProducts = Product::whereRaw('stock <= COALESCE(min_stock, 5)')->count();
+        $pendingReviews = \App\Models\Review::where('approved', false)->count();
+
+        return view('admin_dashboard', compact('totalProducts', 'totalUsers', 'totalAdmins', 'lowStockProducts', 'pendingReviews'));
     }
 
     public function products()
@@ -40,7 +42,9 @@ class AdminController extends Controller
             'brand' => 'nullable|string|max:100',
             'color' => 'nullable|string|in:ouro,prata,neutro',
             'stock' => 'required|integer|min:0',
+            'min_stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
+            'image_url' => 'nullable|url',
         ], [
             'name.required' => 'Nome do produto é obrigatório',
             'description.required' => 'Descrição é obrigatória',
@@ -59,11 +63,14 @@ class AdminController extends Controller
                 if (!file_exists($imgPath)) {
                     mkdir($imgPath, 0755, true);
                 }
-                
+
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $image->move($imgPath, $imageName);
                 $validated['image'] = $imageName;
+            } elseif ($request->filled('image_url')) {
+                // Usar URL fornecida
+                $validated['image'] = $request->image_url;
             } else {
                 // Auto-atribuir imagem baseada no nome do produto
                 $validated['image'] = $this->autoAssignImage($validated['name'], $validated['category']);
@@ -82,7 +89,7 @@ class AdminController extends Controller
     private function autoAssignImage($name, $category)
     {
         $nameLower = mb_strtolower($name);
-        
+
         // Verifica o tipo de produto pelo nome
         if (str_contains($nameLower, 'anel')) {
             return 'anel-safira-azul.webp';
@@ -97,7 +104,7 @@ class AdminController extends Controller
         } elseif (str_contains($nameLower, 'corrente')) {
             return 'colar-corrente-fina.webp';
         }
-        
+
         // Imagem padrão baseada na categoria
         return $category === 'feminino' ? 'anel-safira-azul.webp' : 'relogio1.png';
     }
@@ -121,7 +128,9 @@ class AdminController extends Controller
             'brand' => 'nullable|string|max:100',
             'color' => 'nullable|string|in:ouro,prata,neutro',
             'stock' => 'required|integer|min:0',
+            'min_stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
+            'image_url' => 'nullable|url',
         ]);
 
         try {
@@ -134,11 +143,13 @@ class AdminController extends Controller
                         @unlink(public_path('img/' . $product->image));
                     }
                 }
-                
+
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('img'), $imageName);
                 $validated['image'] = $imageName;
+            } elseif ($request->filled('image_url')) {
+                $validated['image'] = $request->image_url;
             }
 
             $product->update($validated);
@@ -161,8 +172,11 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = User::paginate(10);
-        return view('admin_usuarios', compact('users'));
+        // Separar usuários comuns de admins
+        $users = User::where('is_admin', false)->paginate(10, ['*'], 'users');
+        $admins = User::where('is_admin', true)->paginate(10, ['*'], 'admins');
+
+        return view('admin_usuarios', compact('users', 'admins'));
     }
 
     public function editUser($id)
@@ -185,17 +199,17 @@ class AdminController extends Controller
         try {
             $user->name = $validated['name'];
             $user->email = $validated['email'];
-            
+
             if (!empty($validated['password'])) {
                 $user->password = bcrypt($validated['password']);
             }
-            
+
             if (isset($validated['is_admin'])) {
                 $user->is_admin = $validated['is_admin'];
             }
-            
+
             $user->save();
-            
+
             return redirect()->route('adm-usuarios')->with('success', 'Usuário atualizado com sucesso!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao atualizar usuário: ' . $e->getMessage());
@@ -208,7 +222,7 @@ class AdminController extends Controller
             if ($id === Auth::id()) {
                 return back()->with('error', 'Você não pode deletar sua própria conta!');
             }
-            
+
             $user = User::findOrFail($id);
             $user->delete();
             return redirect()->route('adm-usuarios')->with('success', 'Usuário deletado com sucesso!');
@@ -238,7 +252,7 @@ class AdminController extends Controller
                 'password' => bcrypt($validated['password']),
                 'is_admin' => isset($validated['is_admin']) ? $validated['is_admin'] : false,
             ]);
-            
+
             return redirect()->route('adm-usuarios')->with('success', 'Usuário criado com sucesso!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao criar usuário: ' . $e->getMessage());
@@ -248,7 +262,7 @@ class AdminController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('q');
-        
+
         if (empty($query)) {
             return redirect()->route('adm-dashboard');
         }

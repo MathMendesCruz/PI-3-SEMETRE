@@ -1,4 +1,4 @@
-/* Info Pages Styles */
+/* Info Pages Template - Páginas institucionais */
 
 .breadcrumb {
     display: flex;
@@ -15,24 +15,24 @@
 }
 
 .breadcrumb a:hover {
-    color: #d4af37;
+    color: var(--color-gold, #d4af37);
 }
 
 .breadcrumb span.current {
-    color: #d4af37;
+    color: var(--color-gold, #d4af37);
     font-weight: 500;
 }
 
 .info-page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 2rem 0;
+    padding: 2rem 1rem;
 }
 
 .info-page h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
     font-size: 3rem;
-    color: #333;
+    color: var(--color-dark, #333);
     margin-bottom: 2rem;
     text-align: center;
 }
@@ -43,9 +43,9 @@
 }
 
 .info-content h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
     font-size: 1.8rem;
-    color: #333;
+    color: var(--color-dark, #333);
     margin: 2rem 0 1rem 0;
 }
 
@@ -61,4 +61,14 @@
 
 .info-content li {
     margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .info-page h1 {
+        font-size: 2rem;
+    }
+
+    .info-content h2 {
+        font-size: 1.5rem;
+    }
 }

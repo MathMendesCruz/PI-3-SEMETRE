@@ -10,7 +10,7 @@
                 <span>&gt;</span>
                 <span class="current">Carrinho</span>
             </nav>
-            
+
             <div style="text-align: center; padding: 60px 20px;">
                 <h1 class="section-title">Acesso Negado</h1>
                 <p class="text-secondary" style="font-size: 16px; margin-bottom: 30px;">
@@ -41,7 +41,7 @@
                     <p>Carregando carrinho...</p>
                 </div>
             </section>
-            
+
             <aside class="cart-summary">
             <h2>Resumo</h2>
             <div class="summary-row">
@@ -52,23 +52,23 @@
                 <span id="discount-label">Desconto</span>
                 <span class="value discount" id="discount">-R$ 0,00</span>
             </div>
-            
-            <hr> 
-            
+
+            <hr>
+
             <div class="shipping-calculator">
                 <label for="cep-input" class="shipping-label">Calcular Frete</label>
                 <form class="cep-form" id="cep-form">
-                    <input type="text" id="cep-input" placeholder="Digite seu CEP" maxlength="9"> 
+                    <input type="text" id="cep-input" placeholder="Digite seu CEP" maxlength="9">
                     <button type="submit" id="calculate-shipping-btn">Calcular</button>
                 </form>
-        
-                <p class="shipping-message" id="shipping-message"></p> 
+
+                <p class="shipping-message" id="shipping-message"></p>
             </div>
-            
-            <div class="summary-row shipping-row"> 
+
+            <div class="summary-row shipping-row">
                 <span>Frete</span>
-           
-                <span class="value" id="shipping-value">--</span> 
+
+                <span class="value" id="shipping-value">--</span>
             </div>
             <hr>
 
@@ -81,9 +81,11 @@
                 <input type="text" id="coupon-input" placeholder="Adicionar cupom">
                 <button type="submit">Aplicar</button>
             </form>
-            <p class="coupon-message" id="coupon-message"></p> 
+            <p class="coupon-message" id="coupon-message"></p>
 
-            <button class="btn btn-dark btn-checkout">Finalizar Compra &rarr;</button> 
+            <button class="btn btn-dark btn-checkout" onclick="window.location.href='{{ route('checkout') }}'">
+                Finalizar Compra &rarr;
+            </button>
         </aside>
         </div>
         </div>

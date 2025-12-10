@@ -41,10 +41,12 @@
 /* Estilo do Logo */
 .main-header .logo {
   font-family: var(--font-logo); /* Fonte específica para o logo */
-  font-size: 36px;
+  font-size: 48px;
   font-weight: 700;
   color: var(--color-dark);
   text-decoration: none; /* Garante que não haja sublinhado */
+  margin: 0 20px; /* Adiciona margem lateral */
+  padding: 10px 0; /* Adiciona padding vertical */
 }
 
 /* Estilo da Navegação Principal */
@@ -176,4 +178,51 @@
 @keyframes scrollBrands {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* --- ESTILOS PARA PESQUISA E ADMIN BADGE --- */
+
+/* Formulário de pesquisa */
+.search-form {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 250px;
+}
+
+.search-form input {
+  background-color: var(--color-input-bg);
+  border-radius: 20px;
+  padding: 10px 15px 10px 45px;
+  width: 100%;
+  border: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.search-form input:focus {
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+  outline: none;
+}
+
+.search-form .search-icon {
+  position: absolute;
+  left: 18px;
+  color: var(--color-text-light-gray);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+/* Badge de Admin */
+.admin-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: #c9a55c;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
 }
