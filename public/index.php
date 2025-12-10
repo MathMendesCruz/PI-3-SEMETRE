@@ -5,6 +5,31 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// 🔥 FIX CRÍTICO: Remover cache SQLite ANTES de carregar qualquer coisa
+$cache_files = [
+    __DIR__.'/../bootstrap/cache/config.php',
+    __DIR__.'/../bootstrap/cache/services.php',
+    __DIR__.'/../bootstrap/cache/packages.php',
+];
+
+$cache_cleared = false;
+foreach ($cache_files as $cache_file) {
+    if (file_exists($cache_file)) {
+        $content = file_get_contents($cache_file);
+        // Se detectar 'sqlite' no cache, remover TUDO
+        if (stripos($content, "'sqlite'") !== false || stripos($content, '"sqlite"') !== false) {
+            @unlink($cache_file);
+            $cache_cleared = true;
+        }
+    }
+}
+
+// Se limpou cache, redirecionar para recarregar
+if ($cache_cleared && !isset($_GET['cache_cleared'])) {
+    header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '?cache_cleared=1');
+    exit('🔄 Cache SQLite detectado e removido. Recarregando com MySQL...');
+}
+
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
@@ -12,23 +37,6 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 
 // Register the Composer autoloader...
 require __DIR__.'/../vendor/autoload.php';
-
-// 🔥 FIX: Limpar cache se detectar configuração SQLite
-$cache_config = __DIR__.'/../bootstrap/cache/config.php';
-if (file_exists($cache_config)) {
-    $cached = require $cache_config;
-    if (isset($cached['database.default']) && $cached['database.default'] === 'sqlite') {
-        // Cache com SQLite detectado! Remover para forçar releitura do .env
-        @unlink($cache_config);
-        @unlink(__DIR__.'/../bootstrap/cache/services.php');
-        @unlink(__DIR__.'/../bootstrap/cache/packages.php');
-        // Redirecionar para recarregar
-        if (!isset($_GET['_reloaded'])) {
-            header('Location: ' . $_SERVER['REQUEST_URI'] . (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?') . '_reloaded=1');
-            exit('🔄 Limpando cache SQLite... Recarregando...');
-        }
-    }
-}
 
 // Bootstrap Laravel and handle the request...
 /** @var Application $app */
