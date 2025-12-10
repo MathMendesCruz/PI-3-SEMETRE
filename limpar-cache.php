@@ -2,7 +2,7 @@
 /**
  * Script de Limpeza de Cache Extrema
  * Use se o post-deploy.php não resolver o problema
- * 
+ *
  * Acesse: https://seu-dominio.com.br/limpar-cache.php?chave=elegance2025
  */
 

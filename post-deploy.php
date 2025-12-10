@@ -61,16 +61,16 @@ function check_error($command, $description) {
     <h1>🚀 Elegance Joias - Pós-Deploy</h1>
 
     <?php
-    
+
     echo "<h2>Executando tarefas de deployment...</h2>";
     echo "<hr>";
-    
+
     // 0. Remover diretórios de cache manualmente
     echo "<strong>🔥 0. Removendo cache manualmente (força máxima)</strong><br>";
     @shell_exec("rm -rf bootstrap/cache/*");
     @shell_exec("rm -rf storage/framework/cache/*");
     echo "<span class='success'>✅ Cache removido</span><br><br>";
-    
+
     // 1. Limpar cache
     run_command("php artisan config:clear", "1. Limpando cache de configuração");
     run_command("php artisan cache:clear", "2. Limpando cache geral");    // 2. Verificar .env
