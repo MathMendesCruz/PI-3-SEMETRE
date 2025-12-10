@@ -27,8 +27,6 @@
                         </button>
                     </div>
                 </div>
-
-                <p class="auth-link">É administrador? <a href="{{ route('adm-dashboard') }}">Entre no portal!</a></p>
                 <p class="auth-link">Não tem conta? <a href="{{ route('cadastro') }}">Cadastre-se aqui!</a></p>
                 <button type="submit" class="btn btn-dark" style="width: 100%; margin-top: 20px;">Entrar</button>
             </form>

@@ -14,12 +14,14 @@
                 </nav>
 
                 <div class="filter-group">
-                    <h3 class="filter-title">Filtros</h3>
+                    <h3 class="filter-title">Tipo de Produto</h3>
                     <div class="filter-options" id="category-filters">
                         <a href="#" class="filter-item" data-category="todos"><span>Todos</span> <span>&gt;</span></a>
-                        <a href="#" class="filter-item" data-category="anel"><span>Anel</span> <span>&gt;</span></a>
                         <a href="#" class="filter-item" data-category="colar"><span>Colar</span> <span>&gt;</span></a>
                         <a href="#" class="filter-item" data-category="brinco"><span>Brinco</span> <span>&gt;</span></a>
+                        <a href="#" class="filter-item" data-category="bracelete"><span>Bracelete</span> <span>&gt;</span></a>
+                        <a href="#" class="filter-item" data-category="aliança"><span>Aliança</span> <span>&gt;</span></a>
+                        <a href="#" class="filter-item" data-category="corrente"><span>Corrente</span> <span>&gt;</span></a>
                         <a href="#" class="filter-item" data-category="pulseira"><span>Pulseira</span> <span>&gt;</span></a>
                     </div>
                 </div>
@@ -46,17 +48,14 @@
                     <h3 class="filter-title">Marca</h3>
                     <div class="filter-options" id="brand-filters">
                         <button class="filter-item" data-brand="todos"><span>Todas</span> <span>&gt;</span></button>
-                        <button class="filter-item" data-brand="VERSACE"><span>VERSACE</span> <span>&gt;</span></button>
-                        <button class="filter-item" data-brand="ZARA"><span>ZARA</span> <span>&gt;</span></button>
                         <button class="filter-item" data-brand="GUCCI"><span>GUCCI</span> <span>&gt;</span></button>
                         <button class="filter-item" data-brand="PRADA"><span>PRADA</span> <span>&gt;</span></button>
+                        <button class="filter-item" data-brand="VERSACE"><span>VERSACE</span> <span>&gt;</span></button>
+                        <button class="filter-item" data-brand="ZARA"><span>ZARA</span> <span>&gt;</span></button>
                         <button class="filter-item" data-brand="CALVIN KLEIN"><span>CALVIN KLEIN</span> <span>&gt;</span></button>
                     </div>
                 </div>
-
-                <button class="btn btn-dark" id="apply-filters" style="width: 100%;">Aplicar Filtros</button>
-            </aside>
-
+                
             <section class="listing-products">
                 <div class="listing-header">
                     <h1>Feminino
