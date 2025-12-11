@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AdminUserSeeder extends Seeder
@@ -18,7 +19,7 @@ class AdminUserSeeder extends Seeder
             ['email' => $email],
             [
                 'name' => $name,
-                'password' => $password,
+                'password' => Hash::make($password),
                 'is_admin' => true,
                 'remember_token' => Str::random(10),
             ]
