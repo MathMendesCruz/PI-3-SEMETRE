@@ -272,11 +272,6 @@
   display: block;
 }
 
-/* Fallback de acessibilidade: abrir ao focar (funciona em click/toque mesmo se JS falhar) */
-.user-menu:focus-within .user-menu-dropdown {
-  display: block;
-}
-
 .menu-user-welcome {
   margin: 0;
   font-size: 12px;

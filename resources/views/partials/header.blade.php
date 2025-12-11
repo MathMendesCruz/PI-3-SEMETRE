@@ -55,3 +55,37 @@
         @endauth
     </div>
 </header>
+
+<script>
+// Fallback rápido para o menu do usuário caso o JS principal não carregue
+document.addEventListener('DOMContentLoaded', function () {
+    const menus = document.querySelectorAll('.user-menu');
+    const closeAll = () => menus.forEach(m => {
+        m.classList.remove('open');
+        const t = m.querySelector('.user-menu-toggle');
+        const d = m.querySelector('.user-menu-dropdown');
+        if (t) t.setAttribute('aria-expanded', 'false');
+        if (d) d.setAttribute('aria-hidden', 'true');
+    });
+
+    menus.forEach(menu => {
+        const toggle = menu.querySelector('.user-menu-toggle');
+        const dropdown = menu.querySelector('.user-menu-dropdown');
+        if (!toggle || !dropdown) return;
+
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const willOpen = !menu.classList.contains('open');
+            closeAll();
+            menu.classList.toggle('open', willOpen);
+            toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+            dropdown.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+        });
+
+        dropdown.addEventListener('click', (e) => e.stopPropagation());
+    });
+
+    document.addEventListener('click', () => closeAll());
+});
+</script>
