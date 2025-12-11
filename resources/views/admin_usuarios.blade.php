@@ -4,9 +4,9 @@
 
 @section('breadcrumb', 'Usuários')
 
-@section('content') 
+@section('content')
 
- <div class="admin-card"> 
+ <div class="admin-card">
             <h2>Usuários Cadastrados</h2>
             <p class="subtitle">Total de usuários: {{ $users->total() }}</p>
 
@@ -25,21 +25,21 @@
             <nav class="admin-tabs">
                 <a href="{{ route('adm.produto') }}">Em estoque</a>
                 <a href="{{ route('adm.usuarios') }}" class="active">Usuários</a>
-                <a href="{{ route('adm-cadastro') }}">Cadastrar Produtos</a>
-            </nav>            
+                <a href="{{ route('adm.produto.criar') }}">Cadastrar Produtos</a>
+            </nav>
             <div class="admin-action-bar">
                 <a href="{{ route('adm.usuarios.criar') }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
                     <i class="fas fa-user-plus"></i> Novo Administrador
                 </a>
-                <button class="icon-button"><i class="far fa-calendar-alt"></i></button> <button class="btn btn-secondary dropdown-toggle">Filtros <i class="fas fa-chevron-down"></i></button> 
+                <button class="icon-button"><i class="far fa-calendar-alt"></i></button> <button class="btn btn-secondary dropdown-toggle">Filtros <i class="fas fa-chevron-down"></i></button>
             </div>
 
-            <div class="table-responsive"> 
+            <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Email</th> 
+                            <th>Email</th>
                             <th>ID</th>
                             <th>Data de Registro</th>
                             <th>Ações</th>

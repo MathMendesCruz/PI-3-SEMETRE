@@ -5,7 +5,7 @@
 @section('breadcrumb', 'Produtos em Estoque')
 
 @section('content')
-<div class="admin-card"> 
+<div class="admin-card">
             <h2>Em estoque</h2>
             <p class="subtitle">Produtos em Estoque (Total: {{ $products->total() }})</p>
 
@@ -22,9 +22,9 @@
             @endif
 
             <nav class="admin-tabs">
-                <a href="{{ route('adm.produto') }}" class="active">Em estoque</a> 
-                <a href="{{ route('adm.usuarios') }}">Usuários</a> 
-                <a href="{{ route('adm-cadastro') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Produto</a> 
+                <a href="{{ route('adm.produto') }}" class="active">Em estoque</a>
+                <a href="{{ route('adm.usuarios') }}">Usuários</a>
+                <a href="{{ route('adm.produto.criar') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Produto</a>
             </nav>
 
             <div class="admin-action-bar">
@@ -78,7 +78,7 @@
                         @empty
                             <tr>
                                 <td colspan="8" class="no-products">
-                                    <p>Nenhum produto encontrado. <a href="{{ route('adm-cadastro') }}">Criar novo produto</a></p>
+                                    <p>Nenhum produto encontrado. <a href="{{ route('adm.produto.criar') }}">Criar novo produto</a></p>
                                 </td>
                             </tr>
                         @endforelse

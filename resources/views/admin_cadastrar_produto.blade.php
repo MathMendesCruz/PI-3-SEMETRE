@@ -4,9 +4,9 @@
 
 @section('breadcrumb', 'Cadastrar Produto')
 
-@section('content') 
+@section('content')
 
-<div class="admin-card"> 
+<div class="admin-card">
             <h2>Cadastrar produtos</h2>
             <p class="subtitle">Adicione um novo produto ao catálogo</p>
 
@@ -33,14 +33,14 @@
                 </div>
             @endif
 
-            <nav class="admin-tabs">
+            <nav class="admin-nav">
                 <a href="{{ route('adm.produto') }}">Em estoque</a>
                 <a href="{{ route('adm.usuarios') }}">Usuários</a>
-                <a href="{{ route('adm-cadastro') }}" class="active">Cadastrar Produtos</a>
+                <a href="{{ route('adm.produto.criar') }}" class="active">Cadastrar Produtos</a>
             </nav>
             <form action="{{ route('adm.produto.store') }}" method="POST" enctype="multipart/form-data" class="admin-form product-form-layout">
                 @csrf
-                
+
                 <div class="form-fields">
                     <div class="form-group">
                         <label for="name">Nome do Produto *</label>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Preço (R$) *</label>
-                        <input type="number" id="price" name="price" value="{{ old('price') }}" step="0.01" required placeholder="Ex: 500.00"> 
+                        <input type="number" id="price" name="price" value="{{ old('price') }}" step="0.01" required placeholder="Ex: 500.00">
                         @error('price')<span class="error-text">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-group">
@@ -86,9 +86,9 @@
                     </div>
                     <div class="form-group">
                         <label for="stock">Quantidade em Estoque *</label>
-                        <input type="number" id="stock" name="stock" value="{{ old('stock') }}" required placeholder="Ex: 10" min="0"> 
+                        <input type="number" id="stock" name="stock" value="{{ old('stock') }}" required placeholder="Ex: 10" min="0">
                         @error('stock')<span class="error-text">{{ $message }}</span>@enderror
-                    </div> 
+                    </div>
 
                 </div>
 
@@ -99,13 +99,13 @@
                          <img id="preview-img" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 10px;" alt="Preview">
                      </div>
                      <label for="product_image" class="btn btn-dark">Carregar Imagem (Opcional)</label>
-                     <input type="file" id="product_image" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)"> 
+                     <input type="file" id="product_image" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)">
                      @error('image')<span class="error-text" style="color: red; font-size: 0.9em; display: block; margin-top: 5px;">{{ $message }}</span>@enderror
                 </div>
 
                 <div class="form-actions">
                      <button type="submit" class="btn btn-primary">Salvar Produto</button>
-                     <a href="{{ route('adm.produto') }}" class="btn btn-secondary">Cancelar</a> 
+                     <a href="{{ route('adm.produto') }}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -120,7 +120,7 @@ function previewImage(event) {
     const preview = document.getElementById('preview-img');
     const icon = document.querySelector('.image-placeholder i');
     const text = document.querySelector('.image-placeholder .form-help-text');
-    
+
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {

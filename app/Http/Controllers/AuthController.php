@@ -46,7 +46,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Redirecionar admin para dashboard, cliente para home
-            $redirect = $user->is_admin ? route('adm-dashboard') : route('index');
+            $redirect = $user->is_admin ? route('adm.dashboard') : route('index');
 
             return response()->json([
                 'success' => true,

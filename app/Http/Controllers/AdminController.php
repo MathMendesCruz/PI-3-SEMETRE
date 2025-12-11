@@ -77,7 +77,7 @@ class AdminController extends Controller
             }
 
             Product::create($validated);
-            return redirect()->route('adm-produto')->with('success', 'Produto criado com sucesso!');
+            return redirect()->route('adm.produto')->with('success', 'Produto criado com sucesso!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao criar produto: ' . $e->getMessage());
         }
@@ -153,7 +153,7 @@ class AdminController extends Controller
             }
 
             $product->update($validated);
-            return redirect()->route('adm-produto')->with('success', 'Produto atualizado com sucesso!');
+            return redirect()->route('adm.produto')->with('success', 'Produto atualizado com sucesso!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao atualizar produto: ' . $e->getMessage());
         }
@@ -164,7 +164,7 @@ class AdminController extends Controller
         try {
             $product = Product::findOrFail($id);
             $product->delete();
-            return redirect()->route('adm-produto')->with('success', 'Produto deletado com sucesso!');
+            return redirect()->route('adm.produto')->with('success', 'Produto deletado com sucesso!');
         } catch (\Exception $e) {
             return back()->with('error', 'Erro ao deletar produto: ' . $e->getMessage());
         }
@@ -210,7 +210,7 @@ class AdminController extends Controller
 
             $user->save();
 
-            return redirect()->route('adm-usuarios')->with('success', 'Usuário atualizado com sucesso!');
+            return redirect()->route('adm.usuarios')->with('success', 'Usuário atualizado com sucesso!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao atualizar usuário: ' . $e->getMessage());
         }
@@ -225,7 +225,7 @@ class AdminController extends Controller
 
             $user = User::findOrFail($id);
             $user->delete();
-            return redirect()->route('adm-usuarios')->with('success', 'Usuário deletado com sucesso!');
+            return redirect()->route('adm.usuarios')->with('success', 'Usuário deletado com sucesso!');
         } catch (\Exception $e) {
             return back()->with('error', 'Erro ao deletar usuário: ' . $e->getMessage());
         }
@@ -253,7 +253,7 @@ class AdminController extends Controller
                 'is_admin' => isset($validated['is_admin']) ? $validated['is_admin'] : false,
             ]);
 
-            return redirect()->route('adm-usuarios')->with('success', 'Usuário criado com sucesso!');
+            return redirect()->route('adm.usuarios')->with('success', 'Usuário criado com sucesso!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao criar usuário: ' . $e->getMessage());
         }
