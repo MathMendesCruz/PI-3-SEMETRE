@@ -23,38 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                     },
-                    credentials: 'same-origin',
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await safeParseJson(response);
+                const data = await response.json();
 
-                if (response.ok && data?.success) {
-                    showAlert(data.message || 'Login realizado com sucesso', 'success');
+                if (data.success) {
+                    showAlert(data.message, 'success');
                     setTimeout(() => {
-                        window.location.href = data.redirect || '/';
-                    }, 800);
-                    return;
+                        window.location.href = data.redirect;
+                    }, 1000);
+                } else {
+                    if (data.errors) {
+                        Object.values(data.errors).forEach(error => {
+                            showAlert(error[0], 'error');
+                        });
+                    } else {
+                        showAlert(data.message || 'Erro ao fazer login', 'error');
+                    }
                 }
-
-                // Mensagens de erro claras para 401/422/419
-                if (response.status === 401) {
-                    showAlert(data?.message || 'Email ou senha incorretos', 'error');
-                    return;
-                }
-                if (response.status === 422 && data?.errors) {
-                    Object.values(data.errors).forEach(error => showAlert(error[0], 'error'));
-                    return;
-                }
-                if (response.status === 419) {
-                    showAlert('Sessão expirada. Atualize a página e tente novamente.', 'error');
-                    return;
-                }
-
-                showAlert(data?.message || 'Erro ao fazer login', 'error');
             } catch (error) {
                 console.error('Erro na requisição:', error);
                 showAlert('Erro ao conectar ao servidor', 'error');
@@ -88,10 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                     },
-                    credentials: 'same-origin',
                     body: JSON.stringify({
                         name,
                         email,
@@ -100,26 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
-                const data = await safeParseJson(response);
+                const data = await response.json();
 
-                if (response.ok && data?.success) {
-                    showAlert(data.message || 'Cadastro realizado com sucesso', 'success');
+                if (data.success) {
+                    showAlert(data.message, 'success');
                     setTimeout(() => {
-                        window.location.href = data.redirect || '/';
-                    }, 800);
-                    return;
+                        window.location.href = data.redirect;
+                    }, 1000);
+                } else {
+                    if (data.errors) {
+                        Object.values(data.errors).forEach(error => {
+                            showAlert(error[0], 'error');
+                        });
+                    } else {
+                        showAlert(data.message || 'Erro ao criar conta', 'error');
+                    }
                 }
-
-                if (response.status === 422 && data?.errors) {
-                    Object.values(data.errors).forEach(error => showAlert(error[0], 'error'));
-                    return;
-                }
-                if (response.status === 419) {
-                    showAlert('Sessão expirada. Atualize a página e tente novamente.', 'error');
-                    return;
-                }
-
-                showAlert(data?.message || 'Erro ao criar conta', 'error');
             } catch (error) {
                 console.error('Erro na requisição:', error);
                 showAlert('Erro ao conectar ao servidor', 'error');
@@ -244,13 +227,3 @@ function togglePassword(inputId, button) {
 
 // Tornar a função global
 window.togglePassword = togglePassword;
-
-// Utilitário para evitar quebra ao parsear respostas não-JSON
-async function safeParseJson(response) {
-    try {
-        return await response.json();
-    } catch (err) {
-        console.warn('Resposta não é JSON, status:', response.status);
-        return null;
-    }
-}
