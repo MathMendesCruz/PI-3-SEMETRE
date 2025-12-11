@@ -74,21 +74,21 @@ Route::prefix('adm')->middleware(['auth', 'admin'])->name('adm.')->group(functio
 
     // Produtos
     Route::get('/produtos', [AdminController::class, 'products'])->name('produto');
-    Route::get('/produtos/criar', [AdminController::class, 'createProduct'])->name('produto-criar');
-    Route::post('/produtos', [AdminController::class, 'storeProduct'])->name('produto-store');
-    Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduct'])->name('produto-editar');
-    Route::put('/produtos/{id}', [AdminController::class, 'updateProduct'])->name('produto-update');
-    Route::delete('/produtos/{id}', [AdminController::class, 'deleteProduct'])->name('produto-delete');
+    Route::get('/produtos/criar', [AdminController::class, 'createProduct'])->name('produto.criar');
+    Route::post('/produtos', [AdminController::class, 'storeProduct'])->name('produto.store');
+    Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduct'])->name('produto.editar');
+    Route::put('/produtos/{id}', [AdminController::class, 'updateProduct'])->name('produto.update');
+    Route::delete('/produtos/{id}', [AdminController::class, 'deleteProduct'])->name('produto.delete');
 
     // Usuários
     Route::get('/usuarios', [AdminController::class, 'users'])->name('usuarios');
-    Route::get('/usuarios/{id}/editar', [AdminController::class, 'editUser'])->name('usuarios-editar');
-    Route::put('/usuarios/{id}', [AdminController::class, 'updateUser'])->name('usuarios-update');
-    Route::delete('/usuarios/{id}', [AdminController::class, 'deleteUser'])->name('usuarios-delete');
+    Route::get('/usuarios/{id}/editar', [AdminController::class, 'editUser'])->name('usuarios.editar');
+    Route::put('/usuarios/{id}', [AdminController::class, 'updateUser'])->name('usuarios.update');
+    Route::delete('/usuarios/{id}', [AdminController::class, 'deleteUser'])->name('usuarios.delete');
 
     // Criar novo usuário/admin
-    Route::get('/usuarios/criar', [AdminController::class, 'createAdmin'])->name('usuarios-criar');
-    Route::post('/usuarios', [AdminController::class, 'storeAdmin'])->name('usuarios-store');
+    Route::get('/usuarios/criar', [AdminController::class, 'createAdmin'])->name('usuarios.criar');
+    Route::post('/usuarios', [AdminController::class, 'storeAdmin'])->name('usuarios.store');
 
     // Cupons
     Route::get('/cupons', [CouponController::class, 'index'])->name('coupons');
