@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Rotas Admin (Protegidas por autenticação e middleware admin)
-Route::prefix('adm')->middleware(['auth', 'admin'])->name('adm-')->group(function () {
+Route::prefix('adm')->middleware(['auth', 'admin'])->name('adm.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // Produtos
