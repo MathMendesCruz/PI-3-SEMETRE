@@ -55,7 +55,10 @@
                         <button class="filter-item" data-brand="CALVIN KLEIN"><span>CALVIN KLEIN</span> <span>&gt;</span></button>
                     </div>
                 </div>
-                
+
+                <button class="btn btn-dark" id="apply-filters" style="width: 100%;">Aplicar Filtros</button>
+            </aside>
+
             <section class="listing-products">
                 <div class="listing-header">
                     <h1>Feminino
