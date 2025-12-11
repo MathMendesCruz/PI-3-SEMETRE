@@ -8,7 +8,7 @@
 
  <div class="admin-card">
             <h2>Usuários Cadastrados</h2>
-            <p class="subtitle">Total de usuários: {{ $users->total() }}</p>
+            <p class="subtitle">Total de usuários: {{ $users->total() }} | Administradores: {{ $admins->total() }}</p>
 
             @if($message = session('success'))
                 <div style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
@@ -81,6 +81,62 @@
             @if($users->hasPages())
                 <div style="margin-top: 20px;">
                     {{ $users->links() }}
+                </div>
+            @endif
+        </div>
+
+        <!-- Seção de Administradores -->
+        <div class="admin-card" style="margin-top: 20px;">
+            <h2>Administradores</h2>
+            <p class="subtitle">Total de administradores: {{ $admins->total() }}</p>
+
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>ID</th>
+                            <th>Data de Registro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($admins as $admin)
+                            <tr>
+                                <td>{{ $admin->name }}</td>
+                                <td>{{ $admin->email }}</td>
+                                <td>{{ $admin->id }}</td>
+                                <td>{{ $admin->created_at->format('d.m.Y H:i') }}</td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="{{ route('adm.usuarios.editar', $admin->id) }}" class="btn btn-sm btn-secondary" style="padding: 4px 8px; font-size: 0.85em; background-color: #666; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">Editar</a>
+                                        @if($admin->id !== Auth::id())
+                                            <form action="{{ route('adm.usuarios.delete', $admin->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.85em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este administrador?')">Deletar</button>
+                                            </form>
+                                        @else
+                                            <span style="color: #999; font-size: 0.9em; padding: 4px 8px;">Você</span>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 30px;">
+                                    <p>Nenhum administrador encontrado.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @if($admins->hasPages())
+                <div style="margin-top: 20px;">
+                    {{ $admins->links() }}
                 </div>
             @endif
         </div>
