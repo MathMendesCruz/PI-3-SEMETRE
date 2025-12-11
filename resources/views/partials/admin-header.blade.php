@@ -1,7 +1,10 @@
 <header class="admin-header">
     <div class="admin-header-content container">
         <div style="display: flex; align-items: center; gap: 12px;">
-            <button class="btn-back" data-history-back>Voltar</button>
+            <button onclick="window.history.back()" style="background: none; border: none; cursor: pointer; color: #666; font-size: 0.95em; display: flex; align-items: center; gap: 6px; padding: 8px 0; transition: color 0.2s;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='#666'">
+                <i class="fas fa-arrow-left"></i>
+                <span>Voltar</span>
+            </button>
             <nav aria-label="breadcrumb" class="admin-breadcrumbs">
                 <ol>
                     <li><a href="{{ route('adm.dashboard') }}">Painel</a></li>
