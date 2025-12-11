@@ -34,15 +34,6 @@
                 </div>
 
                 <div class="filter-group">
-                    <h3 class="filter-title">Cor</h3>
-                    <div class="color-filter-list" id="color-filters">
-                        <button class="color-swatch" style="background-color: #fde047;" title="Ouro" data-color="ouro" aria-label="Filtro de cor Ouro"></button>
-                        <button class="color-swatch" style="background-color: #d1d5db;" title="Prata" data-color="prata" aria-label="Filtro de cor Prata"></button>
-                        <button class="color-swatch" style="background-color: #1f2937;" title="Preto" data-color="preto" aria-label="Filtro de cor Preto"></button>
-                    </div>
-                </div>
-
-                <div class="filter-group">
                     <h3 class="filter-title">Marca</h3>
                     <div class="filter-options" id="brand-filters">
                         <button class="filter-item" data-brand="todos"><span>Todas</span> <span>&gt;</span></button>
