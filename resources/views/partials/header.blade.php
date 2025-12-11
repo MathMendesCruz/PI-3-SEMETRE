@@ -26,7 +26,7 @@
                 <div class="user-menu-dropdown">
                     <p class="menu-user-name">{{ Auth::user()->name }}</p>
                     @if(Auth::user()->is_admin)
-                        <a href="{{ route('adm-dashboard') }}" class="menu-link">Painel de Admin</a>
+                        <a href="{{ route('adm.dashboard') }}" class="menu-link">Painel de Admin</a>
                     @endif
                     <a href="{{ route('profile') }}" class="menu-link">Meu Perfil</a>
                     <a href="{{ route('orders.index') }}" class="menu-link">Meus Pedidos</a>

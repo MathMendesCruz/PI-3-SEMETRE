@@ -4,7 +4,7 @@
             <button class="btn-back" data-history-back>Voltar</button>
             <nav aria-label="breadcrumb" class="admin-breadcrumbs">
                 <ol>
-                    <li><a href="{{ route('adm-dashboard') }}">Painel</a></li> 
+                    <li><a href="{{ route('adm.dashboard') }}">Painel</a></li> 
                     <li aria-current="page">@yield('breadcrumb', 'Dashboard')</li>
                 </ol>
             </nav>

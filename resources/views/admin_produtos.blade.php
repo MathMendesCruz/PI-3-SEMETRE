@@ -22,8 +22,8 @@
             @endif
 
             <nav class="admin-tabs">
-                <a href="{{ route('adm-produto') }}" class="active">Em estoque</a> 
-                <a href="{{ route('adm-usuarios') }}">Usuários</a> 
+                <a href="{{ route('adm.produto') }}" class="active">Em estoque</a> 
+                <a href="{{ route('adm.usuarios') }}">Usuários</a> 
                 <a href="{{ route('adm-cadastro') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Produto</a> 
             </nav>
 
@@ -66,8 +66,8 @@
                                 <td>{{ $product->created_at->format('d.m.Y') }} <span class="time">{{ $product->created_at->format('H:i') }}</span></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ route('adm-produto-editar', $product->id) }}" class="btn btn-sm btn-secondary">Editar</a>
-                                        <form action="{{ route('adm-produto-delete', $product->id) }}" method="POST" class="inline-form">
+                                        <a href="{{ route('adm.produto.editar', $product->id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                        <form action="{{ route('adm.produto.delete', $product->id) }}" method="POST" class="inline-form">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza?')">Deletar</button>

@@ -21,7 +21,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('adm-produto-update', $product->id) }}" method="POST" enctype="multipart/form-data" class="admin-form product-form-layout">
+            <form action="{{ route('adm.produto.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="admin-form product-form-layout">
                 @csrf
                 @method('PUT')
                 
@@ -87,7 +87,7 @@
 
                 <div class="form-actions">
                      <button type="submit" class="btn btn-primary">Atualizar Produto</button>
-                     <a href="{{ route('adm-produto') }}" class="btn btn-secondary">Cancelar</a> 
+                     <a href="{{ route('adm.produto') }}" class="btn btn-secondary">Cancelar</a> 
                 </div>
             </form>
         </div>

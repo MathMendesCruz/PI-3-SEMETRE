@@ -27,7 +27,7 @@
         </div>
     @endif
 
-    <form action="{{ route('adm-usuarios-store') }}" method="POST" class="admin-form">
+    <form action="{{ route('adm.usuarios.store') }}" method="POST" class="admin-form">
         @csrf
 
         <div class="form-fields" style="max-width: 600px;">
@@ -74,7 +74,7 @@
 
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                 <button type="submit" class="btn btn-primary">Criar Usuário</button>
-                <a href="{{ route('adm-usuarios') }}" class="btn btn-secondary">Cancelar</a>
+                <a href="{{ route('adm.usuarios') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </div>
     </form>

@@ -27,7 +27,7 @@
         </div>
     @endif
 
-    <form action="{{ route('adm-usuarios-update', $user->id) }}" method="POST" class="admin-form">
+    <form action="{{ route('adm.usuarios.update', $user->id) }}" method="POST" class="admin-form">
         @csrf
         @method('PUT')
 
@@ -75,7 +75,7 @@
 
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                <a href="{{ route('adm-usuarios') }}" class="btn btn-secondary">Cancelar</a>
+                <a href="{{ route('adm.usuarios') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </div>
     </form>

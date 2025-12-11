@@ -34,11 +34,11 @@
             @endif
 
             <nav class="admin-tabs">
-                <a href="{{ route('adm-produto') }}">Em estoque</a>
-                <a href="{{ route('adm-usuarios') }}">Usuários</a>
+                <a href="{{ route('adm.produto') }}">Em estoque</a>
+                <a href="{{ route('adm.usuarios') }}">Usuários</a>
                 <a href="{{ route('adm-cadastro') }}" class="active">Cadastrar Produtos</a>
             </nav>
-            <form action="{{ route('adm-produto-store') }}" method="POST" enctype="multipart/form-data" class="admin-form product-form-layout">
+            <form action="{{ route('adm.produto.store') }}" method="POST" enctype="multipart/form-data" class="admin-form product-form-layout">
                 @csrf
                 
                 <div class="form-fields">
@@ -105,7 +105,7 @@
 
                 <div class="form-actions">
                      <button type="submit" class="btn btn-primary">Salvar Produto</button>
-                     <a href="{{ route('adm-produto') }}" class="btn btn-secondary">Cancelar</a> 
+                     <a href="{{ route('adm.produto') }}" class="btn btn-secondary">Cancelar</a> 
                 </div>
             </form>
         </div>

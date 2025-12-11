@@ -30,17 +30,17 @@
 
             <div class="dashboard-navigation">
 
-                <a href="{{ route('adm-produto') }}" class="dashboard-link-card">
+                <a href="{{ route('adm.produto') }}" class="dashboard-link-card">
                     <i class="fas fa-boxes fa-2x"></i> <span>Produtos em Estoque</span>
                     <p>Visualizar e gerenciar produtos existentes.</p>
                 </a>
 
-                <a href="{{ route('adm-usuarios') }}" class="dashboard-link-card">
+                <a href="{{ route('adm.usuarios') }}" class="dashboard-link-card">
                     <i class="fas fa-users fa-2x"></i> <span>Usuários Cadastrados</span>
                     <p>Verificar e administrar contas de usuários.</p>
                 </a>
 
-                <a href="{{ route('adm-produto-criar') }}" class="dashboard-link-card">
+                <a href="{{ route('adm.produto.criar') }}" class="dashboard-link-card">
                      <i class="fas fa-plus-circle fa-2x"></i> <span>Cadastrar Novo Produto</span>
                     <p>Adicionar novos itens ao catálogo da loja.</p>
                 </a>

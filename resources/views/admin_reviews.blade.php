@@ -22,8 +22,8 @@
     @endif
 
     <nav class="admin-tabs">
-        <a href="{{ route('adm-produto') }}">Em estoque</a>
-        <a href="{{ route('adm-usuarios') }}">Usuários</a>
+        <a href="{{ route('adm.produto') }}">Em estoque</a>
+        <a href="{{ route('adm.usuarios') }}">Usuários</a>
         <a href="{{ route('adm.coupons') }}">Cupons</a>
         <a href="{{ route('adm.reviews') }}" class="active">Avaliações</a>
     </nav>
