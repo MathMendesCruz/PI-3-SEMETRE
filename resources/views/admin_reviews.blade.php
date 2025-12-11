@@ -117,7 +117,7 @@
 
     @if($reviews->hasPages())
         <div style="margin-top: 20px;">
-            {{ $reviews->links() }}
+            {{ $reviews->links('vendor.pagination.simple') }}
         </div>
     @endif
 </div>

@@ -117,7 +117,7 @@
 
     @if($coupons->hasPages())
         <div style="margin-top: 20px;">
-            {{ $coupons->links() }}
+            {{ $coupons->links('vendor.pagination.simple') }}
         </div>
     @endif
 </div>

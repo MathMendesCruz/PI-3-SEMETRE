@@ -103,7 +103,7 @@
             <!-- Paginação -->
             @if($products->hasPages())
                 <div style="margin-top: 40px; display: flex; justify-content: center;">
-                    {{ $products->links() }}
+                    {{ $products->links('vendor.pagination.simple') }}
                 </div>
             @endif
         </div>

@@ -27,11 +27,23 @@
         </div>
     @endif
 
-    <form action="{{ route('adm.usuarios.update', $user->id) }}" method="POST" class="admin-form">
+    <form action="{{ route('adm.usuarios.update', $user->id) }}" method="POST" enctype="multipart/form-data" class="admin-form">
         @csrf
         @method('PUT')
 
         <div class="form-fields" style="max-width: 600px;">
+            <div class="form-group">
+                <label for="avatar">Foto de Perfil</label>
+                @if($user->avatar)
+                    <div style="margin-bottom: 10px;">
+                        <img src="{{ asset($user->avatar) }}" alt="Avatar atual" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;">
+                    </div>
+                @endif
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+                <small style="color: #666; display: block; margin-top: 0.25rem;">Formatos aceitos: JPG, PNG, GIF (máx: 2MB)</small>
+                @error('avatar')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
+            </div>
+
             <div class="form-group">
                 <label for="name">Nome Completo *</label>
                 <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required placeholder="Ex: João Silva">

@@ -87,9 +87,7 @@
             </div>
 
             @if($products->hasPages())
-                <div style="margin-top: 20px;">
-                    {{ $products->links() }}
-                </div>
+                {{ $products->links('vendor.pagination.simple') }}
             @endif
         </div>
 @endsection

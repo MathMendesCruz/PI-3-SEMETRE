@@ -79,9 +79,7 @@
             </div>
 
             @if($users->hasPages())
-                <div style="margin-top: 20px;">
-                    {{ $users->links() }}
-                </div>
+                {{ $users->links('vendor.pagination.simple') }}
             @endif
         </div>
 
@@ -135,9 +133,7 @@
             </div>
 
             @if($admins->hasPages())
-                <div style="margin-top: 20px;">
-                    {{ $admins->links() }}
-                </div>
+                {{ $admins->links('vendor.pagination.simple') }}
             @endif
         </div>
 @endsection

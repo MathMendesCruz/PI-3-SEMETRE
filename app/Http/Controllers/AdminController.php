@@ -194,6 +194,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6|confirmed',
             'is_admin' => 'nullable|boolean',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
@@ -206,6 +207,19 @@ class AdminController extends Controller
 
             if (isset($validated['is_admin'])) {
                 $user->is_admin = $validated['is_admin'];
+            }
+
+            // Processar upload de avatar
+            if ($request->hasFile('avatar')) {
+                // Deletar avatar antigo se existir
+                if ($user->avatar && file_exists(public_path($user->avatar))) {
+                    unlink(public_path($user->avatar));
+                }
+
+                $avatar = $request->file('avatar');
+                $avatarName = 'avatar_' . $user->id . '_' . time() . '.' . $avatar->getClientOriginalExtension();
+                $avatar->move(public_path('img/avatars'), $avatarName);
+                $user->avatar = 'img/avatars/' . $avatarName;
             }
 
             $user->save();
