@@ -78,6 +78,7 @@
 
             <div class="form-group">
                 <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="hidden" name="active" value="0">
                     <input type="checkbox" id="active" name="active" value="1" {{ old('active', true) ? 'checked' : '' }}>
                     <span>Cupom ativo</span>
                 </label>

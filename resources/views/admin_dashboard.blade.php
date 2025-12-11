@@ -55,6 +55,11 @@
                     <p>Aprovar ou rejeitar comentários de produtos.</p>
                 </a>
 
+                <a href="{{ route('adm.orders') }}" class="dashboard-link-card">
+                    <i class="fas fa-shopping-cart fa-2x"></i> <span>Pedidos Realizados</span>
+                    <p>Gerenciar compras e acompanhar entrega.</p>
+                </a>
+
                 </div>
         </div>
 @endsection

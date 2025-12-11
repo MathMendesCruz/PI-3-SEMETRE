@@ -272,4 +272,16 @@ class AdminController extends Controller
             return back()->withInput()->with('error', 'Erro ao criar usuário: ' . $e->getMessage());
         }
     }
+
+    public function orders()
+    {
+        $orders = \App\Models\Order::with('user', 'items.product')->paginate(15);
+        return view('admin_pedidos', compact('orders'));
+    }
+
+    public function showOrder($id)
+    {
+        $order = \App\Models\Order::with('user', 'items.product')->findOrFail($id);
+        return view('admin_detalhes_pedido', compact('order'));
+    }
 }

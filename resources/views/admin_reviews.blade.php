@@ -24,14 +24,19 @@
     <nav class="admin-tabs">
         <a href="{{ route('adm.produto') }}">Em estoque</a>
         <a href="{{ route('adm.usuarios') }}">Usuários</a>
+        <a href="{{ route('adm.orders') }}">Pedidos</a>
         <a href="{{ route('adm.coupons') }}">Cupons</a>
         <a href="{{ route('adm.reviews') }}" class="active">Avaliações</a>
     </nav>
 
     <div class="admin-action-bar">
-        <button class="btn btn-secondary dropdown-toggle" onclick="filterReviews('all')">Todos</button>
-        <button class="btn btn-secondary" onclick="filterReviews('pending')">Pendentes</button>
-        <button class="btn btn-secondary" onclick="filterReviews('approved')">Aprovados</button>
+        <input type="text" id="search-filter" placeholder="Filtrar por produto ou usuário..." class="filter-input" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px; width: 250px;">
+        <button class="btn btn-secondary" onclick="filterByRating('all')">Todas as estrelas</button>
+        <button class="btn btn-secondary" onclick="filterByRating(5)">⭐⭐⭐⭐⭐</button>
+        <button class="btn btn-secondary" onclick="filterByRating(4)">⭐⭐⭐⭐</button>
+        <button class="btn btn-secondary" onclick="filterByRating(3)">⭐⭐⭐</button>
+        <button class="btn btn-secondary" onclick="filterByRating(2)">⭐⭐</button>
+        <button class="btn btn-secondary" onclick="filterByRating(1)">⭐</button>
     </div>
 
     <div class="table-responsive">
@@ -43,13 +48,11 @@
                     <th>Avaliação</th>
                     <th>Comentário</th>
                     <th>Data</th>
-                    <th>Status</th>
-                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($reviews as $review)
-                    <tr data-status="{{ $review->approved ? 'approved' : 'pending' }}">
+                    <tr data-rating="{{ $review->rating }}" data-product="{{ strtolower($review->product->name ?? '') }}" data-user="{{ strtolower($review->user->name ?? '') }}">
                         <td>
                             <a href="{{ route('produto', $review->product_id) }}" target="_blank" style="color: #333; text-decoration: none;">
                                 {{ Str::limit($review->product->name ?? 'N/A', 30) }}
@@ -72,41 +75,15 @@
                             </div>
                         </td>
                         <td style="max-width: 300px;">
-                            <div style="max-height: 60px; overflow: hidden; text-overflow: ellipsis;">
-                                {{ Str::limit($review->comment, 100) }}
+                            <div style="max-height: 60px; overflow: auto; word-break: break-word;">
+                                {{ $review->comment }}
                             </div>
                         </td>
                         <td style="font-size: 0.85em;">{{ $review->created_at->format('d/m/Y H:i') }}</td>
-                        <td>
-                            @if($review->approved)
-                                <span class="badge" style="background-color: #4CAF50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.85em;">Aprovado</span>
-                            @else
-                                <span class="badge" style="background-color: #ff9800; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.85em;">Pendente</span>
-                            @endif
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                @if(!$review->approved)
-                                    <form action="{{ route('adm.reviews.approve', $review->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm" style="background-color: #4CAF50; color: white; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer;">
-                                            <i class="fas fa-check"></i> Aprovar
-                                        </button>
-                                    </form>
-                                @endif
-                                <form action="{{ route('adm.reviews.reject', $review->id) }}" method="POST" class="inline-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja deletar esta avaliação?')">
-                                        <i class="fas fa-times"></i> Rejeitar
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="no-products">
+                        <td colspan="5" class="no-products">
                             <p>Nenhuma avaliação encontrada.</p>
                         </td>
                     </tr>
@@ -123,16 +100,38 @@
 </div>
 
 <script>
-function filterReviews(status) {
-    const rows = document.querySelectorAll('tbody tr[data-status]');
+function filterByRating(rating) {
+    const rows = document.querySelectorAll('tbody tr[data-rating]');
     rows.forEach(row => {
-        if (status === 'all') {
+        if (rating === 'all') {
             row.style.display = '';
         } else {
-            row.style.display = row.dataset.status === status ? '' : 'none';
+            row.style.display = row.dataset.rating == rating ? '' : 'none';
         }
     });
 }
+
+// Filtro por texto (produto e usuário)
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-filter');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr[data-product]');
+
+            rows.forEach(row => {
+                const product = row.dataset.product;
+                const user = row.dataset.user;
+
+                if (product.includes(searchTerm) || user.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+});
 </script>
 
 @endsection

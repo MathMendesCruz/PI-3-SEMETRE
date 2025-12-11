@@ -98,6 +98,10 @@ Route::prefix('adm')->middleware(['auth', 'admin'])->name('adm.')->group(functio
     Route::put('/cupons/{id}', [CouponController::class, 'update'])->name('coupons.update');
     Route::delete('/cupons/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
 
+    // Pedidos
+    Route::get('/pedidos', [AdminController::class, 'orders'])->name('orders');
+    Route::get('/pedidos/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
+
     // Reviews
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
     Route::post('/reviews/{id}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');

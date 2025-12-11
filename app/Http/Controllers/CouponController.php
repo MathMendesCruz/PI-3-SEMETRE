@@ -28,12 +28,19 @@ class CouponController extends Controller
             'usage_limit' => 'nullable|integer|min:1',
             'valid_from' => 'nullable|date',
             'valid_until' => 'nullable|date|after_or_equal:valid_from',
-            'active' => 'boolean',
+            'active' => 'nullable|boolean',
         ]);
 
-        Coupon::create($validated);
+        // Garantir que active é boolean
+        $validated['active'] = isset($validated['active']) ? (bool)$validated['active'] : true;
+        $validated['usage_count'] = 0;
 
-        return redirect()->route('adm.coupons')->with('success', 'Cupom criado com sucesso!');
+        try {
+            Coupon::create($validated);
+            return redirect()->route('adm.coupons')->with('success', 'Cupom criado com sucesso!');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Erro ao criar cupom: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -54,12 +61,18 @@ class CouponController extends Controller
             'usage_limit' => 'nullable|integer|min:1',
             'valid_from' => 'nullable|date',
             'valid_until' => 'nullable|date|after_or_equal:valid_from',
-            'active' => 'boolean',
+            'active' => 'nullable|boolean',
         ]);
 
-        $coupon->update($validated);
+        // Garantir que active é boolean
+        $validated['active'] = isset($validated['active']) ? (bool)$validated['active'] : false;
 
-        return redirect()->route('adm.coupons')->with('success', 'Cupom atualizado com sucesso!');
+        try {
+            $coupon->update($validated);
+            return redirect()->route('adm.coupons')->with('success', 'Cupom atualizado com sucesso!');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Erro ao atualizar cupom: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)

@@ -24,7 +24,9 @@
     <nav class="admin-tabs">
         <a href="{{ route('adm.produto') }}">Em estoque</a>
         <a href="{{ route('adm.usuarios') }}">Usuários</a>
+        <a href="{{ route('adm.orders') }}">Pedidos</a>
         <a href="{{ route('adm.coupons') }}" class="active">Cupons</a>
+        <a href="{{ route('adm.reviews') }}">Avaliações</a>
         <a href="{{ route('adm.coupons.create') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Cupom</a>
     </nav>
 
