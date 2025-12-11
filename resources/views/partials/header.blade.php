@@ -17,19 +17,22 @@
         </a>
         @auth
             <div class="user-menu">
-                <button class="icon-link user-menu-toggle" title="Menu do usuário">
+                <button class="icon-link user-menu-toggle" type="button" title="Menu do usuário" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     @if(Auth::user()->is_admin)
                         <span class="admin-badge">ADM</span>
                     @endif
                 </button>
-                <div class="user-menu-dropdown">
+                <div class="user-menu-dropdown" aria-hidden="true">
+                    <p class="menu-user-welcome">Olá,</p>
                     <p class="menu-user-name">{{ Auth::user()->name }}</p>
+                    <div class="menu-divider"></div>
                     @if(Auth::user()->is_admin)
-                        <a href="{{ route('adm.dashboard') }}" class="menu-link">Painel de Admin</a>
+                        <a href="{{ route('adm.dashboard') }}" class="menu-link">Painel do Admin</a>
                     @endif
-                    <a href="{{ route('profile') }}" class="menu-link">Meu Perfil</a>
+                    <a href="{{ route('profile') }}" class="menu-link">Detalhes da Conta</a>
                     <a href="{{ route('orders.index') }}" class="menu-link">Meus Pedidos</a>
+                    <div class="menu-divider"></div>
                     <form action="{{ route('logout') }}" method="POST" class="menu-logout">
                         @csrf
                         <button type="submit" class="menu-logout-btn">Sair</button>
@@ -37,9 +40,18 @@
                 </div>
             </div>
         @else
-            <a href="{{ route('login') }}" class="icon-link" title="Login">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </a>
+            <div class="user-menu">
+                <button class="icon-link user-menu-toggle" type="button" title="Entrar ou criar conta" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </button>
+                <div class="user-menu-dropdown" aria-hidden="true">
+                    <p class="menu-user-welcome">Bem-vindo!</p>
+                    <p class="menu-user-name">Acesse sua conta</p>
+                    <div class="menu-divider"></div>
+                    <a href="{{ route('login') }}" class="menu-link">Entrar</a>
+                    <a href="{{ route('cadastro') }}" class="menu-link">Criar conta</a>
+                </div>
+            </div>
         @endauth
     </div>
 </header>

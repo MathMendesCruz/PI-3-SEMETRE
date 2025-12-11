@@ -226,3 +226,100 @@
   font-size: 10px;
   font-weight: 600;
 }
+
+/* Menu do Usuário (login/conta preview) */
+.user-menu {
+  position: relative;
+}
+
+.user-menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 6px;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.user-menu-toggle:hover {
+  color: var(--color-primary);
+  background-color: var(--color-input-bg);
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 220px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: none;
+  z-index: 20;
+}
+
+.user-menu.open .user-menu-dropdown {
+  display: block;
+}
+
+.menu-user-welcome {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-light-gray);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.menu-user-name {
+  margin: 2px 0 8px;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+.menu-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 8px 0;
+}
+
+.menu-link {
+  display: block;
+  padding: 8px 0;
+  color: var(--color-text-dark);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.menu-link:hover {
+  color: var(--color-primary);
+}
+
+.menu-logout {
+  margin-top: 6px;
+}
+
+.menu-logout-btn {
+  width: 100%;
+  background: var(--color-primary);
+  color: var(--color-dark);
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.menu-logout-btn:hover {
+  background: #e6b86f;
+}
+
+.menu-logout-btn:active {
+  transform: translateY(1px);
+}
