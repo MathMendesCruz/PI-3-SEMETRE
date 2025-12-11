@@ -4,16 +4,16 @@
             <button class="btn-back" data-history-back>Voltar</button>
             <nav aria-label="breadcrumb" class="admin-breadcrumbs">
                 <ol>
-                    <li><a href="{{ route('adm.dashboard') }}">Painel</a></li> 
+                    <li><a href="{{ route('adm.dashboard') }}">Painel</a></li>
                     <li aria-current="page">@yield('breadcrumb', 'Dashboard')</li>
                 </ol>
             </nav>
         </div>
         <div class="admin-header-right">
-            <form action="{{ route('adm-search') }}" method="GET" class="admin-search">
+            {{-- <form action="{{ route('adm.search') }}" method="GET" class="admin-search">
                 <i class="fas fa-search"></i>
                 <input type="search" name="q" placeholder="Pesquisar produtos, usuários..." value="{{ request('q') }}">
-            </form>
+            </form> --}}
             <div class="user-profile">
                 <span class="user-initial">{{ substr(Auth::user()->name, 0, 1) }}</span>
                 <span class="user-name">{{ Auth::user()->name }}</span>
