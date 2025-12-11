@@ -267,11 +267,6 @@
   display: block;
 }
 
-/* Fallback: exibir no hover se JS não carregar */
-.user-menu:hover .user-menu-dropdown {
-  display: block;
-}
-
 .menu-user-welcome {
   margin: 0;
   font-size: 12px;

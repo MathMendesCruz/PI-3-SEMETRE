@@ -20,14 +20,6 @@ class ReviewController extends Controller
 
         $product = Product::findOrFail($productId);
 
-        // Verificar se o usuário já comprou o produto
-        if (!Auth::user()->hasOrderedProduct($productId)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Você só pode comentar produtos que já comprou',
-            ], 403);
-        }
-
         // Verificar se já comentou
         $existingReview = Review::where('user_id', Auth::id())
             ->where('product_id', $productId)
@@ -45,19 +37,26 @@ class ReviewController extends Controller
             'comment' => 'required|string|min:10|max:1000',
         ]);
 
-        $review = Review::create([
-            'user_id' => Auth::id(),
-            'product_id' => $productId,
-            'rating' => $validated['rating'],
-            'comment' => $validated['comment'],
-            'approved' => false, // Requer aprovação
-        ]);
+        try {
+            $review = Review::create([
+                'user_id' => Auth::id(),
+                'product_id' => $productId,
+                'rating' => $validated['rating'],
+                'comment' => $validated['comment'],
+                'approved' => false, // Requer aprovação
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Comentário enviado! Aguardando aprovação.',
-            'review' => $review,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Comentário enviado! Aguardando aprovação do administrador.',
+                'review' => $review,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao enviar comentário: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function approve($id)
