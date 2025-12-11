@@ -1,8 +1,8 @@
 /* css/atomic/organisms/_product-grid.css */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 20px;
 }
 .feedback-grid {
   display: grid;
