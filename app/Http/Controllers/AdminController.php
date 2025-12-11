@@ -12,7 +12,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         $totalProducts = Product::count();
-        $totalUsers = User::where('is_admin', false)->count();
+        $totalUsers = User::count();
         $totalAdmins = User::where('is_admin', true)->count();
         $lowStockProducts = Product::whereRaw('stock <= COALESCE(min_stock, 5)')->count();
         $pendingReviews = \App\Models\Review::where('approved', false)->count();
