@@ -357,13 +357,38 @@
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    credentials: 'same-origin',
+                    credentials: 'include',
                     body: JSON.stringify(data)
                 });
+                const responseText = await response.text();
+                let result = null;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    // Mantém null se não for JSON
+                }
 
-                const result = await response.json();
+                if (response.status === 401) {
+                    messageDiv.style.display = 'block';
+                    messageDiv.style.backgroundColor = '#fee';
+                    messageDiv.style.color = '#c00';
+                    messageDiv.textContent = 'Faça login para enviar sua avaliação.';
+                    return;
+                }
 
-                if (result.success) {
+                if (!response.ok) {
+                    const validationMessage = result?.errors
+                        ? Object.values(result.errors).flat().join(' ')
+                        : (result?.message || 'Erro ao enviar avaliação.');
+
+                    messageDiv.style.display = 'block';
+                    messageDiv.style.backgroundColor = '#fee';
+                    messageDiv.style.color = '#c00';
+                    messageDiv.textContent = validationMessage;
+                    return;
+                }
+
+                if (result?.success) {
                     messageDiv.style.display = 'block';
                     messageDiv.style.backgroundColor = '#d4edda';
                     messageDiv.style.color = '#155724';
@@ -383,7 +408,7 @@
                     messageDiv.style.display = 'block';
                     messageDiv.style.backgroundColor = '#fee';
                     messageDiv.style.color = '#c00';
-                    messageDiv.textContent = result.message || 'Erro ao enviar avaliação.';
+                    messageDiv.textContent = (result && result.message) ? result.message : 'Erro ao enviar avaliação.';
                 }
             } catch (error) {
                 console.error('Erro:', error);

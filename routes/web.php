@@ -15,6 +15,8 @@ Route::get('/feminino', [ProductController::class, 'feminino'])->name('feminino'
 Route::get('/masculino', [ProductController::class, 'masculino'])->name('masculino');
 Route::get('/produto/{id?}', [ProductController::class, 'show'])->name('produto');
 Route::get('/pesquisa', [ProductController::class, 'search'])->name('search');
+// Reviews (controller valida login e permissões)
+Route::post('/produtos/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 // Rotas de Autenticação
 Route::controller(AuthController::class)->middleware('guest')->group(function () {
@@ -59,9 +61,6 @@ Route::middleware('auth')->group(function () {
     // Pagamentos (mock / integração)
     Route::post('/payment/process', [\App\Http\Controllers\PaymentController::class, 'process'])->name('payment.process');
     Route::post('/payment/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');
-
-    // Rotas de Reviews
-    Route::post('/produtos/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
     // Perfil do usuário
     Route::get('/perfil', [AuthController::class, 'profile'])->name('profile');
