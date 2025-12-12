@@ -18,7 +18,8 @@ async function addToCart(productId, quantity = 1, productData = null) {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             credentials: 'same-origin',
             body: JSON.stringify({
@@ -29,29 +30,33 @@ async function addToCart(productId, quantity = 1, productData = null) {
 
         console.log('Response status:', response.status);
 
-        // Se não estiver autenticado, o Laravel redireciona para login
         if (response.redirected) {
             window.location.href = response.url;
             return false;
         }
 
-        // Algumas respostas de erro podem não ser JSON (ex: página HTML)
-        const data = await response.json().catch(() => null);
-
-        console.log('Response data:', data);
-
-        if (!data) {
-            showNotification('Não foi possível adicionar ao carrinho. Faça login para continuar.', 'warning');
+        // Tentativa de parse JSON com fallback para ajudar no debug
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (err) {
+            const text = await response.text().catch(() => null);
+            console.warn('Resposta não-JSON do servidor ao adicionar ao carrinho:', response.status, text);
+            if (response.status === 419) {
+                showNotification('Sessão expirada (CSRF). Recarregue a página e faça login.', 'warning');
+            } else if (response.status === 401) {
+                window.location.href = '/login';
+            } else {
+                showNotification('Não foi possível adicionar ao carrinho. Tente novamente.', 'warning');
+            }
             return false;
         }
 
+        console.log('Response data:', data);
+
         if (data.success) {
-            // Atualizar contador do carrinho
             updateCartCount(data.cart_count);
-
-            // Mostrar mensagem de sucesso
             showNotification('Produto adicionado ao carrinho!', 'success');
-
             return true;
         } else {
             showNotification(data.message || 'Erro ao adicionar produto', 'error');
