@@ -8,17 +8,19 @@
 <div class="admin-card">
     <h2>Avaliações de Produtos</h2>
     @php
+        // Garantir que contagens estejam definidas mesmo se a consulta falhar
+        $total_all = $total_all ?? ($reviews->total() ?? 0);
+        $total_pending = $total_pending ?? ($reviews->where('approved', false)->count() ?? 0);
+        $total_approved = $total_approved ?? ($reviews->where('approved', true)->count() ?? 0);
+
         $countLabel = 'totais';
-        $total_count = $reviews->total() ?? 0;
+        $total_count = $total_all;
         if (isset($status) && $status === 'pending') {
             $countLabel = 'pendentes';
-            $total_count = $total_pending ?? $reviews->total() ?? 0;
+            $total_count = $total_pending;
         } elseif (isset($status) && $status === 'approved') {
             $countLabel = 'aprovadas';
-            $total_count = $total_approved ?? $reviews->total() ?? 0;
-        } else {
-            $countLabel = 'totais';
-            $total_count = $total_all ?? $reviews->total() ?? 0;
+            $total_count = $total_approved;
         }
     @endphp
     <p class="subtitle">Total de avaliações {{ $countLabel }}: {{ $total_count }}</p>
@@ -46,9 +48,9 @@
     <div class="admin-action-bar" style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
         <form method="GET" action="{{ route('adm.reviews') }}" style="display:flex; gap:10px; align-items:center; flex-wrap: wrap; width:100%;">
             <select name="status" style="padding:8px 12px; border:1px solid #ddd; border-radius:4px;">
-                <option value="pending" {{ (request('status','all')==='pending') ? 'selected' : '' }}>Pendentes</option>
-                <option value="approved" {{ request('status','approved') ? 'selected' : '' }}>Aprovadas</option>
-                <option value="all" {{ (request('status','all')==='all') ? 'selected' : '' }}>Todas</option>
+                <option value="pending" {{ request('status','all')==='pending' ? 'selected' : '' }}>Pendentes</option>
+                <option value="approved" {{ request('status','all')==='approved' ? 'selected' : '' }}>Aprovadas</option>
+                <option value="all" {{ request('status','all')==='all' ? 'selected' : '' }}>Todas</option>
             </select>
 
             <select name="rating" style="padding:8px 12px; border:1px solid #ddd; border-radius:4px;">
