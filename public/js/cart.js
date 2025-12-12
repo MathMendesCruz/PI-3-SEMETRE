@@ -24,7 +24,19 @@ async function addToCart(productId, quantity = 1, productData = null) {
             })
         });
 
-        const data = await response.json();
+        // Se não estiver autenticado, o Laravel redireciona para login
+        if (response.redirected) {
+            window.location.href = response.url;
+            return false;
+        }
+
+        // Algumas respostas de erro podem não ser JSON (ex: página HTML)
+        const data = await response.json().catch(() => null);
+
+        if (!data) {
+            showNotification('Não foi possível adicionar ao carrinho. Faça login para continuar.', 'warning');
+            return false;
+        }
 
         if (data.success) {
             // Atualizar contador do carrinho
@@ -129,7 +141,17 @@ async function applyCoupon() {
             body: JSON.stringify({ code })
         });
 
-        const data = await response.json();
+        if (response.redirected) {
+            window.location.href = response.url;
+            return;
+        }
+
+        const data = await response.json().catch(() => null);
+
+        if (!data) {
+            showNotification('Não foi possível aplicar o cupom. Faça login e tente novamente.', 'warning');
+            return;
+        }
 
         if (data.success) {
             showNotification('Cupom aplicado com sucesso!', 'success');

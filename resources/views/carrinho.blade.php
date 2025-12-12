@@ -3,93 +3,114 @@
 @section('title', 'Carrinho - Elegance Joias')
 
 @section('content')
-    @if(!auth()->check())
-        <div class="container">
-            <nav class="breadcrumb">
-                <a href="{{ route('index') }}">Página Inicial</a>
-                <span>&gt;</span>
-                <span class="current">Carrinho</span>
-            </nav>
+@php
+    $cartItems = session('cart', []);
+    $coupon = session('coupon');
+    $subtotal = 0;
+    foreach ($cartItems as $item) {
+        $subtotal += $item['price'] * $item['quantity'];
+    }
+    $discount = $coupon['discount'] ?? 0;
+    $shipping = $subtotal > 0 ? 15.00 : 0;
+    $total = $subtotal - $discount + $shipping;
+@endphp
 
-            <div style="text-align: center; padding: 60px 20px;">
-                <h1 class="section-title">Acesso Negado</h1>
-                <p class="text-secondary" style="font-size: 16px; margin-bottom: 30px;">
-                    Para acessar o carrinho, você precisa estar logado na sua conta.
-                </p>
-                <a href="{{ route('login') }}" class="btn btn-dark">Fazer Login</a>
-                <span class="auth-divider">ou</span>
-                <a href="{{ route('cadastro') }}" class="btn btn-outline">Criar Conta</a>
-            </div>
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <button class="btn-back" data-history-back>Voltar</button>
+        <nav class="breadcrumb">
+            <a href="{{ route('index') }}">Página Inicial</a>
+            <span>&gt;</span>
+            <span class="current">Carrinho</span>
+        </nav>
+    </div>
+
+    <h1 class="section-title" style="text-align: left; margin-top: 0; margin-bottom: var(--space-xl);">Seu carrinho</h1>
+
+    @if(empty($cartItems))
+        <div style="text-align: center; padding: 60px 20px; border: 1px dashed #ddd; border-radius: 10px;">
+            <p style="margin-bottom: 16px; color: #666;">Seu carrinho está vazio.</p>
+            <a href="{{ route('index') }}" class="btn btn-dark">Voltar às compras</a>
         </div>
     @else
-        <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <button class="btn-back" data-history-back>Voltar</button>
-            <nav class="breadcrumb">
-                <a href="{{ route('index') }}">Página Inicial</a>
-                <span>&gt;</span>
-                <span class="current">Carrinho</span>
-            </nav>
-        </div>
-
-        <h1 class="section-title" style="text-align: left; margin-top: 0; margin-bottom: var(--space-xl);">Seu carrinho</h1>
-
-        <div class="cart-layout">
+        <div class="cart-layout" data-backend-cart="true">
             <section class="cart-items" id="cart-items">
-                <!-- Carrinho carregado dinamicamente via JavaScript -->
-                <div style="text-align: center; padding: 40px; color: #999;">
-                    <p>Carregando carrinho...</p>
-                </div>
+                @foreach($cartItems as $item)
+                    <div class="cart-item" data-id="{{ $item['id'] }}">
+                        <div class="cart-item-info">
+                            <div class="cart-item-img">
+                                <img src="{{ asset('img/' . $item['image']) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                            </div>
+                            <div class="cart-item-details">
+                                <h4>{{ $item['name'] }}</h4>
+                                <p class="cart-item-price">R$ {{ number_format($item['price'], 2, ',', '.') }}</p>
+                            </div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn decrease-qty" onclick="updateCartItem({{ $item['id'] }}, Math.max(1, {{ $item['quantity'] }} - 1))">-</button>
+                                <span class="quantity-value">{{ $item['quantity'] }}</span>
+                                <button class="quantity-btn increase-qty" onclick="updateCartItem({{ $item['id'] }}, {{ $item['quantity'] }} + 1)">+</button>
+                            </div>
+                            <button class="delete-item-btn" onclick="removeFromCart({{ $item['id'] }})">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011 1v6a1 1 0 11-2 0V9a1 1 0 011-1zm4 0a1 1 0 011 1v6a1 1 0 11-2 0V9a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                @endforeach
             </section>
 
             <aside class="cart-summary">
-            <h2>Resumo</h2>
-            <div class="summary-row">
-                <span>Subtotal</span>
-                <span class="value" id="subtotal">R$ 0,00</span>
-            </div>
-            <div class="summary-row">
-                <span id="discount-label">Desconto</span>
-                <span class="value discount" id="discount">-R$ 0,00</span>
-            </div>
+                <h2>Resumo</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span class="value" id="subtotal">R$ {{ number_format($subtotal, 2, ',', '.') }}</span>
+                </div>
+                <div class="summary-row">
+                    <span id="discount-label">Desconto</span>
+                    <span class="value discount" id="discount">-R$ {{ number_format($discount, 2, ',', '.') }}</span>
+                </div>
 
-            <hr>
+                <hr>
 
-            <div class="shipping-calculator">
-                <label for="cep-input" class="shipping-label">Calcular Frete</label>
-                <form class="cep-form" id="cep-form">
-                    <input type="text" id="cep-input" placeholder="Digite seu CEP" maxlength="9">
-                    <button type="submit" id="calculate-shipping-btn">Calcular</button>
-                </form>
+                <div class="shipping-calculator">
+                    <label for="postal-code" class="shipping-label">Calcular Frete</label>
+                    <div class="cep-form">
+                        <input type="text" id="postal-code" placeholder="Digite seu CEP" maxlength="9">
+                        <button type="button" id="validate-cep-btn">Calcular</button>
+                    </div>
+                    <p class="shipping-message" id="shipping-message"></p>
+                </div>
 
-                <p class="shipping-message" id="shipping-message"></p>
-            </div>
+                <div class="summary-row shipping-row">
+                    <span>Frete</span>
+                    <span class="value" id="shipping-cost">R$ {{ number_format($shipping, 2, ',', '.') }}</span>
+                </div>
+                <hr>
 
-            <div class="summary-row shipping-row">
-                <span>Frete</span>
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span class="value" id="total">R$ {{ number_format($total, 2, ',', '.') }}</span>
+                </div>
 
-                <span class="value" id="shipping-value">--</span>
-            </div>
-            <hr>
+                <div class="coupon-form" style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" id="coupon-code" placeholder="Adicionar cupom" value="{{ $coupon['code'] ?? '' }}" style="flex: 1;">
+                    <button type="button" id="apply-coupon-btn">Aplicar</button>
+                </div>
+                @if(session('error'))
+                    <p class="coupon-message error" style="margin-top: 6px; color: #c00;">{{ session('error') }}</p>
+                @endif
+                @if(session('success'))
+                    <p class="coupon-message success" style="margin-top: 6px; color: #2e7d32;">{{ session('success') }}</p>
+                @endif
 
-            <div class="summary-row total-row">
-                <span>Total</span>
-                <span class="value" id="total">R$ 0,00</span>
-            </div>
-
-            <form class="coupon-form" id="coupon-form">
-                <input type="text" id="coupon-input" placeholder="Adicionar cupom">
-                <button type="submit">Aplicar</button>
-            </form>
-            <p class="coupon-message" id="coupon-message"></p>
-
-            <button class="btn btn-dark btn-checkout" onclick="window.location.href='{{ route('checkout') }}'">
-                Finalizar Compra &rarr;
-            </button>
-        </aside>
+                <button class="btn btn-dark btn-checkout" onclick="window.location.href='{{ route('checkout') }}'" style="margin-top: 16px;">
+                    Finalizar Compra &rarr;
+                </button>
+            </aside>
         </div>
-        </div>
-
-        @include('partials.contact')
     @endif
+</div>
+
+@include('partials.contact')
 @endsection

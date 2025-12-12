@@ -325,7 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LÓGICA DA PÁGINA DO CARRINHO ---
     const cartPage = document.querySelector('.cart-layout:not(.checkout-layout)');
-    if (cartPage) {
+    // Quando o carrinho é renderizado pelo backend (flag data-backend-cart), pulamos a lógica antiga de LocalStorage
+    if (cartPage && !cartPage.dataset.backendCart) {
         console.log("Cart page logic loaded."); // Debug
         let isCouponApplied = false;
         const WELCOME_COUPON_CODE = "PRIMEIRACOMPRA";
