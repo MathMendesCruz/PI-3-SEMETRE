@@ -38,12 +38,25 @@ class AuthController extends Controller
             ], 422);
         }
 
+        // Guardar carrinho antes de fazer login (antes da sessão ser regenerada)
+        $cartBeforeLogin = session()->get('cart', []);
+        $couponBeforeLogin = session()->get('coupon');
+
         // Tentar autenticar
         if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password
         ])) {
             $user = Auth::user();
+
+            // Restaurar carrinho após login bem-sucedido
+            if (!empty($cartBeforeLogin)) {
+                session()->put('cart', $cartBeforeLogin);
+            }
+
+            if ($couponBeforeLogin) {
+                session()->put('coupon', $couponBeforeLogin);
+            }
 
             // Redirecionar admin para dashboard, cliente para home
             $redirect = $user->is_admin ? route('adm.dashboard') : route('index');
@@ -94,6 +107,10 @@ class AuthController extends Controller
             ], 422);
         }
 
+        // Guardar carrinho antes de criar sessão nova
+        $cartBeforeRegister = session()->get('cart', []);
+        $couponBeforeRegister = session()->get('coupon');
+
         // Criar novo usuário
         try {
             // Cadastro público sempre cria clientes (nunca admin)
@@ -107,6 +124,15 @@ class AuthController extends Controller
 
             // Autenticar automaticamente
             Auth::login($user);
+
+            // Restaurar carrinho após registro bem-sucedido
+            if (!empty($cartBeforeRegister)) {
+                session()->put('cart', $cartBeforeRegister);
+            }
+
+            if ($couponBeforeRegister) {
+                session()->put('coupon', $couponBeforeRegister);
+            }
 
             // Cliente sempre vai para home após cadastro
             return response()->json([

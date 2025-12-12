@@ -273,23 +273,26 @@ function showNotification(message, type = 'info') {
 // Event Listeners quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Botões "Adicionar ao Carrinho"
-    document.querySelectorAll('.add-to-cart-btn, .add-to-cart-btn-hover, .btn-add-cart').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
-            e.preventDefault();
+    // Event Delegation: Botões "Adicionar ao Carrinho"
+    // Isso funciona para botões criados dinamicamente também
+    document.addEventListener('click', async function(e) {
+        const button = e.target.closest('.add-to-cart-btn, .add-to-cart-btn-hover, .add-to-cart-btn-listing, .btn-add-cart');
 
-            const productId = this.dataset.productId || this.getAttribute('data-product-id');
-            const quantityElement = this.closest('.product-info, .product-card')?.querySelector('.quantity-value');
-            const quantity = quantityElement ? parseInt(quantityElement.textContent) : 1;
+        if (!button) return;
 
-            if (!productId) {
-                showNotification('Erro: ID do produto não encontrado', 'error');
-                return;
-            }
+        e.preventDefault();
 
-            await addToCart(productId, quantity);
-        });
-    });
+        const productId = button.dataset.productId || button.getAttribute('data-product-id');
+        const quantityElement = button.closest('.product-info, .product-card')?.querySelector('.quantity-value');
+        const quantity = quantityElement ? parseInt(quantityElement.textContent) : 1;
+
+        if (!productId) {
+            showNotification('Erro: ID do produto não encontrado', 'error');
+            return;
+        }
+
+        await addToCart(productId, quantity);
+    }, true); // Use capture phase para garantir que funciona mesmo com stopPropagation
 
     // Seletores de quantidade (+ e -)
     document.querySelectorAll('.qty-plus').forEach(btn => {

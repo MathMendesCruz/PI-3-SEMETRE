@@ -59,16 +59,6 @@
                         <input type="text" id="brand" name="brand" value="{{ old('brand', $product->brand) }}" placeholder="Ex: VERSACE, GUCCI, PRADA">
                     </div>
                     <div class="form-group">
-                        <label for="color">Cor</label>
-                        <select id="color" name="color">
-                            <option value="">Selecione uma cor</option>
-                            <option value="ouro" {{ old('color', $product->color) === 'ouro' ? 'selected' : '' }}>Ouro</option>
-                            <option value="prata" {{ old('color', $product->color) === 'prata' ? 'selected' : '' }}>Prata</option>
-                            <option value="neutro" {{ old('color', $product->color) === 'neutro' ? 'selected' : '' }}>Neutro</option>
-                        </select>
-                        @error('color')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
-                    </div>
-                    <div class="form-group">
                         <label for="stock">Quantidade em Estoque *</label>
                         <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" required placeholder="Ex: 10" min="0">
                         @error('stock')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
@@ -84,12 +74,18 @@
                 </div>
 
                 <div class="image-upload-area">
-                     <div class="image-placeholder">
-                         <i class="fas fa-image fa-3x"></i>
-                         <p style="margin-top: 10px; font-size: 0.9em; color: #999;">As imagens serão geradas automaticamente com base no tipo de produto</p>
+                     <div class="image-placeholder" id="image-preview">
+                         @if($product->image)
+                             <img id="preview-img" src="{{ asset('img/' . $product->image) }}" alt="{{ $product->name }}" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
+                         @else
+                             <i class="fas fa-image fa-3x"></i>
+                             <p class="form-help-text" style="margin-top: 10px;">Clique para escolher uma imagem</p>
+                             <img id="preview-img" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 10px;" alt="Preview">
+                         @endif
                      </div>
                      <label for="product_image" class="btn btn-dark">Carregar Imagem (Opcional)</label>
-                     <input type="file" id="product_image" name="image" accept="image/*" style="display: none;">
+                     <input type="file" id="product_image" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                     @error('image')<span style="color: #d32f2f; font-size: 0.9em; display: block; margin-top: 5px;">{{ $message }}</span>@enderror
                 </div>
 
                 <div class="form-actions">
@@ -100,4 +96,28 @@
         </div>
     </main>
 
+@endsection
+
+@section('extra-scripts')
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('preview-img');
+        const placeholder = document.querySelector('.image-placeholder i');
+        const placeholderText = document.querySelector('.form-help-text');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+
+                // Hide placeholder icon and text if they exist
+                if (placeholder) placeholder.style.display = 'none';
+                if (placeholderText) placeholderText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 @endsection
