@@ -3,13 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Review;
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::all();
-        return view('index', compact('products'));
+        // Buscar reviews aprovadas com dados do usuário
+        $reviews = Review::with('user')
+            ->where('approved', true)
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get();
+        
+        // Buscar marcas únicas dos produtos
+        $brands = Product::whereNotNull('brand')
+            ->distinct()
+            ->pluck('brand')
+            ->filter()
+            ->values()
+            ->toArray();
+        
+        return view('index', compact('products', 'reviews', 'brands'));
     }
 
     public function feminino()
