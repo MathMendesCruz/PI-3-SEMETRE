@@ -30,13 +30,20 @@ class PaymentController extends Controller
 
         // Modo mock: se método for cartão, simulamos autorização
         if (in_array($data['payment_method'], ['credit_card', 'debit_card'])) {
-            // Simular checagens básicas
-            // Aqui você integraria com Stripe/PayPal
+            // Simular checagens básicas — integração real aconteceria aqui
             $order->status = 'paid';
-            // Marca como pago. Se existir coluna `payment_confirmed_at`, pode ser ajustada manualmente.
+            $order->payment_confirmed_at = now();
             $order->save();
 
-            return response()->json(['success' => true, 'message' => 'Pagamento simulado com sucesso', 'order_id' => $order->id]);
+            // Após confirmação do pagamento, limpar carrinho e cupom da sessão
+            session()->forget(['cart', 'coupon']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pagamento simulado com sucesso',
+                'order_id' => $order->id,
+                'redirect' => route('order.success')
+            ]);
         }
 
         // Para pix/boleto, geramos instruções mock e marcamos como pending_payment

@@ -113,8 +113,8 @@ class OrderController extends Controller
                 'items' => $orderItems,
             ]);
 
-            // Limpar carrinho e cupom
-            session()->forget(['cart', 'coupon']);
+            // OBS: não limpar o carrinho aqui — o frontend primeiro processa o pagamento
+            // e somente após confirmação (ex: cartão) o carrinho deve ser removido.
 
             return response()->json([
                 'success' => true,

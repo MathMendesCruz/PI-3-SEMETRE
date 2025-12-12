@@ -286,7 +286,7 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
 
         // Se pagamento simulado em cartão foi processado => redirecionar ao sucesso
         if (payResult.success) {
-            window.location.href = createResult.redirect || '{{ route('order.success') }}';
+            window.location.href = payResult.redirect || createResult.redirect || '{{ route('order.success') }}';
             return;
         }
 
