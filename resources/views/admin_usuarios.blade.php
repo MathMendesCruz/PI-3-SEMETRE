@@ -30,11 +30,28 @@
                 <a href="{{ route('adm.reviews') }}">Avaliações</a>
                 <a href="{{ route('adm.produto.criar') }}">Cadastrar Produtos</a>
             </nav>
-            <div class="admin-action-bar">
-                <a href="{{ route('adm.usuarios.criar') }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-                    <i class="fas fa-user-plus"></i> Novo Administrador
-                </a>
-                <button class="icon-button"><i class="far fa-calendar-alt"></i></button> <button class="btn btn-secondary dropdown-toggle">Filtros <i class="fas fa-chevron-down"></i></button>
+
+            <div class="admin-action-bar" style="margin-bottom: 20px;">
+                <form method="GET" action="{{ route('adm.usuarios') }}" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%;">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou email..."
+                           style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 200px;">
+
+                    <input type="date" name="date_from" value="{{ request('date_from') }}" placeholder="Data inicial"
+                           style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <input type="date" name="date_to" value="{{ request('date_to') }}" placeholder="Data final"
+                           style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+
+                    @if(request()->hasAny(['search', 'date_from', 'date_to']))
+                        <a href="{{ route('adm.usuarios') }}" class="btn btn-outline" style="padding: 8px 12px;">
+                            <i class="fas fa-times"></i> Limpar
+                        </a>
+                    @endif
+                </form>
             </div>
 
             <div class="table-responsive">
@@ -90,6 +107,12 @@
         <div class="admin-card" style="margin-top: 20px;">
             <h2>Administradores</h2>
             <p class="subtitle">Total de administradores: {{ $admins->total() }}</p>
+
+            <div class="admin-action-bar" style="margin-bottom: 20px;">
+                <a href="{{ route('adm.usuarios.criar') }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-user-plus"></i> Novo Administrador
+                </a>
+            </div>
 
             <div class="table-responsive">
                 <table class="admin-table">

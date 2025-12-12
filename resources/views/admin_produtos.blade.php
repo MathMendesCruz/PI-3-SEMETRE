@@ -31,8 +31,43 @@
             </nav>
 
             <div class="admin-action-bar">
-                <button class="icon-button"><i class="far fa-calendar-alt"></i></button>
-                <button class="btn btn-secondary dropdown-toggle">Filtros <i class="fas fa-chevron-down"></i></button>
+                <form method="GET" action="{{ route('adm.produto') }}" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%;">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar produto..."
+                           style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 200px;">
+
+                    <select name="category" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">Todas Categorias</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>
+                                {{ ucfirst($cat) }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <select name="brand" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">Todas Marcas</option>
+                        @foreach($brands as $brand)
+                            <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>
+                                {{ $brand }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <label style="display: flex; align-items: center; gap: 5px; padding: 8px;">
+                        <input type="checkbox" name="low_stock" value="1" {{ request('low_stock') ? 'checked' : '' }}>
+                        <span>Estoque Baixo</span>
+                    </label>
+
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+
+                    @if(request()->hasAny(['search', 'category', 'brand', 'low_stock']))
+                        <a href="{{ route('adm.produto') }}" class="btn btn-outline" style="padding: 8px 12px;">
+                            <i class="fas fa-times"></i> Limpar
+                        </a>
+                    @endif
+                </form>
             </div>
 
             <div class="table-responsive">

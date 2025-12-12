@@ -22,8 +22,40 @@ class AdminController extends Controller
 
     public function products()
     {
-        $products = Product::paginate(10);
-        return view('admin_produtos', compact('products'));
+        $query = Product::query();
+
+        // Filtro por categoria
+        if (request('category')) {
+            $query->where('category', request('category'));
+        }
+
+        // Filtro por marca
+        if (request('brand')) {
+            $query->where('brand', request('brand'));
+        }
+
+        // Filtro por estoque baixo
+        if (request('low_stock') === '1') {
+            $query->whereRaw('stock <= COALESCE(min_stock, 5)');
+        }
+
+        // Busca por nome
+        if (request('search')) {
+            $query->where('name', 'LIKE', '%' . request('search') . '%');
+        }
+
+        // Ordenação
+        $sortBy = request('sort', 'created_at');
+        $sortOrder = request('order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+
+        $products = $query->paginate(10)->appends(request()->query());
+
+        // Buscar categorias e marcas únicas para os filtros
+        $categories = Product::distinct()->pluck('category')->filter()->sort()->values();
+        $brands = Product::distinct()->pluck('brand')->filter()->sort()->values();
+
+        return view('admin_produtos', compact('products', 'categories', 'brands'));
     }
 
     public function createProduct()
@@ -188,9 +220,43 @@ class AdminController extends Controller
 
     public function users()
     {
-        // Separar usuários comuns de admins
-        $users = User::where('is_admin', false)->paginate(10, ['*'], 'users');
-        $admins = User::where('is_admin', true)->paginate(10, ['*'], 'admins');
+        // Query para usuários comuns
+        $usersQuery = User::where('is_admin', false);
+
+        // Query para administradores
+        $adminsQuery = User::where('is_admin', true);
+
+        // Filtros aplicáveis a ambos
+        if (request('search')) {
+            $search = request('search');
+            $usersQuery->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', '%' . $search . '%')
+                  ->orWhere('email', 'LIKE', '%' . $search . '%');
+            });
+            $adminsQuery->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', '%' . $search . '%')
+                  ->orWhere('email', 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        // Filtro por data de registro
+        if (request('date_from')) {
+            $usersQuery->whereDate('created_at', '>=', request('date_from'));
+            $adminsQuery->whereDate('created_at', '>=', request('date_from'));
+        }
+        if (request('date_to')) {
+            $usersQuery->whereDate('created_at', '<=', request('date_to'));
+            $adminsQuery->whereDate('created_at', '<=', request('date_to'));
+        }
+
+        // Ordenação
+        $sortBy = request('sort', 'created_at');
+        $sortOrder = request('order', 'desc');
+        $usersQuery->orderBy($sortBy, $sortOrder);
+        $adminsQuery->orderBy($sortBy, $sortOrder);
+
+        $users = $usersQuery->paginate(10, ['*'], 'users')->appends(request()->query());
+        $admins = $adminsQuery->paginate(10, ['*'], 'admins')->appends(request()->query());
 
         return view('admin_usuarios', compact('users', 'admins'));
     }
@@ -291,7 +357,40 @@ class AdminController extends Controller
 
     public function orders()
     {
-        $orders = \App\Models\Order::with('user', 'items.product')->paginate(15);
+        $query = \App\Models\Order::with('user', 'items.product');
+
+        // Filtro por status
+        if (request('status')) {
+            $query->where('status', request('status'));
+        }
+
+        // Filtro por busca (número do pedido ou nome do cliente)
+        if (request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('order_number', 'LIKE', '%' . $search . '%')
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'LIKE', '%' . $search . '%')
+                                ->orWhere('email', 'LIKE', '%' . $search . '%');
+                  });
+            });
+        }
+
+        // Filtro por data
+        if (request('date_from')) {
+            $query->whereDate('created_at', '>=', request('date_from'));
+        }
+        if (request('date_to')) {
+            $query->whereDate('created_at', '<=', request('date_to'));
+        }
+
+        // Ordenação
+        $sortBy = request('sort', 'created_at');
+        $sortOrder = request('order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+
+        $orders = $query->paginate(15)->appends(request()->query());
+
         return view('admin_pedidos', compact('orders'));
     }
 

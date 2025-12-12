@@ -30,12 +30,34 @@
     </nav>
 
     <div class="admin-action-bar">
-        <input type="text" id="search-filter" placeholder="Filtrar por número do pedido ou cliente..." class="filter-input" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px; width: 300px;">
-        <button class="btn btn-secondary" onclick="filterByStatus('all')">Todos</button>
-        <button class="btn btn-secondary" onclick="filterByStatus('pending')">Pendentes</button>
-        <button class="btn btn-secondary" onclick="filterByStatus('processing')">Em Processamento</button>
-        <button class="btn btn-secondary" onclick="filterByStatus('completed')">Entregues</button>
-        <button class="btn btn-secondary" onclick="filterByStatus('cancelled')">Cancelados</button>
+        <form method="GET" action="{{ route('adm.orders') }}" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%;">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por pedido ou cliente..."
+                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 250px;">
+
+            <select name="status" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">Todos os Status</option>
+                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pendentes</option>
+                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Em Processamento</option>
+                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Entregues</option>
+                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelados</option>
+            </select>
+
+            <input type="date" name="date_from" value="{{ request('date_from') }}" placeholder="Data inicial"
+                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+
+            <input type="date" name="date_to" value="{{ request('date_to') }}" placeholder="Data final"
+                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+
+            <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-filter"></i> Filtrar
+            </button>
+
+            @if(request()->hasAny(['search', 'status', 'date_from', 'date_to']))
+                <a href="{{ route('adm.orders') }}" class="btn btn-outline" style="padding: 8px 12px;">
+                    <i class="fas fa-times"></i> Limpar
+                </a>
+            @endif
+        </form>
     </div>
 
     <div class="table-responsive">
@@ -106,40 +128,5 @@
         </div>
     @endif
 </div>
-
-<script>
-function filterByStatus(status) {
-    const rows = document.querySelectorAll('tbody tr[data-status]');
-    rows.forEach(row => {
-        if (status === 'all') {
-            row.style.display = '';
-        } else {
-            row.style.display = row.dataset.status === status ? '' : 'none';
-        }
-    });
-}
-
-// Filtro por texto (número do pedido e cliente)
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search-filter');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr[data-order]');
-
-            rows.forEach(row => {
-                const orderNumber = row.dataset.order.toLowerCase();
-                const client = row.dataset.client;
-
-                if (orderNumber.includes(searchTerm) || client.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-    }
-});
-</script>
 
 @endsection

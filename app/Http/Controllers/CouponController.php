@@ -9,7 +9,41 @@ class CouponController extends Controller
 {
     public function index()
     {
-        $coupons = Coupon::paginate(15);
+        $query = Coupon::query();
+
+        // Filtro por código
+        if (request('search')) {
+            $query->where('code', 'LIKE', '%' . request('search') . '%');
+        }
+
+        // Filtro por tipo
+        if (request('type')) {
+            $query->where('type', request('type'));
+        }
+
+        // Filtro por status
+        if (request('active') !== null && request('active') !== '') {
+            $query->where('active', request('active'));
+        }
+
+        // Filtro por validade
+        if (request('validity') === 'valid') {
+            $query->where('active', true)
+                  ->where(function($q) {
+                      $q->whereNull('valid_until')
+                        ->orWhere('valid_until', '>=', now());
+                  });
+        } elseif (request('validity') === 'expired') {
+            $query->where('valid_until', '<', now());
+        }
+
+        // Ordenação
+        $sortBy = request('sort', 'created_at');
+        $sortOrder = request('order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+
+        $coupons = $query->paginate(15)->appends(request()->query());
+
         return view('admin_coupons', compact('coupons'));
     }
 

@@ -30,6 +30,41 @@
         <a href="{{ route('adm.coupons.create') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Cupom</a>
     </nav>
 
+    <div class="admin-action-bar" style="margin-bottom: 20px;">
+        <form method="GET" action="{{ route('adm.coupons') }}" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%;">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por código..."
+                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 200px;">
+
+            <select name="type" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">Todos os Tipos</option>
+                <option value="percentage" {{ request('type') == 'percentage' ? 'selected' : '' }}>Porcentagem</option>
+                <option value="fixed" {{ request('type') == 'fixed' ? 'selected' : '' }}>Valor Fixo</option>
+            </select>
+
+            <select name="active" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">Todos os Status</option>
+                <option value="1" {{ request('active') === '1' ? 'selected' : '' }}>Ativos</option>
+                <option value="0" {{ request('active') === '0' ? 'selected' : '' }}>Inativos</option>
+            </select>
+
+            <select name="validity" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">Todas Validades</option>
+                <option value="valid" {{ request('validity') == 'valid' ? 'selected' : '' }}>Válidos</option>
+                <option value="expired" {{ request('validity') == 'expired' ? 'selected' : '' }}>Expirados</option>
+            </select>
+
+            <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-filter"></i> Filtrar
+            </button>
+
+            @if(request()->hasAny(['search', 'type', 'active', 'validity']))
+                <a href="{{ route('adm.coupons') }}" class="btn btn-outline" style="padding: 8px 12px;">
+                    <i class="fas fa-times"></i> Limpar
+                </a>
+            @endif
+        </form>
+    </div>
+
     <div class="table-responsive">
         <table class="admin-table">
             <thead>
