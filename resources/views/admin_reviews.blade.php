@@ -117,11 +117,6 @@
                                         <button type="submit" class="btn btn-sm btn-secondary" style="padding:6px 12px; font-size:0.875em;">Aprovar</button>
                                     </form>
                                 @endif
-                                <form method="POST" action="{{ route('adm.reviews.reject', $review->id) }}" class="inline-form" onsubmit="return confirm('Tem certeza?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" style="padding:6px 12px; font-size:0.875em;">Rejeitar</button>
-                                </form>
                             </div>
                         </td>
                     </tr>
