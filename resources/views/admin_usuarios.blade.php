@@ -74,15 +74,15 @@
                                 <td>{{ $user->created_at->format('d.m.Y H:i') }}</td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem;">
-                                        <a href="{{ route('adm.usuarios.editar', $user->id) }}" class="btn btn-sm btn-secondary" style="padding: 4px 8px; font-size: 0.85em; background-color: #666; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">Editar</a>
+                                        <a href="{{ route('adm.usuarios.editar', $user->id) }}" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 0.875em; background-color: #666; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">Editar</a>
                                         @if($user->id !== Auth::id())
                                             <form action="{{ route('adm.usuarios.delete', $user->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.85em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este cliente?')">Deletar</button>
+                                                <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.875em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este cliente?')">Deletar</button>
                                             </form>
                                         @else
-                                            <span style="color: #999; font-size: 0.9em; padding: 4px 8px;">Você</span>
+                                            <span style="color: #999; font-size: 0.9em; padding: 6px 12px;">Você</span>
                                         @endif
                                     </div>
                                 </td>
@@ -134,15 +134,15 @@
                                 <td>{{ $admin->created_at->format('d.m.Y H:i') }}</td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem;">
-                                        <a href="{{ route('adm.usuarios.editar', $admin->id) }}" class="btn btn-sm btn-secondary" style="padding: 4px 8px; font-size: 0.85em; background-color: #666; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">Editar</a>
+                                        <a href="{{ route('adm.usuarios.editar', $admin->id) }}" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 0.875em; background-color: #666; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">Editar</a>
                                         @if($admin->id !== Auth::id())
                                             <form action="{{ route('adm.usuarios.delete', $admin->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.85em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este administrador?')">Deletar</button>
+                                                <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.875em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este administrador?')">Deletar</button>
                                             </form>
                                         @else
-                                            <span style="color: #999; font-size: 0.9em; padding: 4px 8px;">Você</span>
+                                            <span style="color: #999; font-size: 0.9em; padding: 6px 12px;">Você</span>
                                         @endif
                                     </div>
                                 </td>

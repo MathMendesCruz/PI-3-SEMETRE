@@ -27,7 +27,7 @@
         <a href="{{ route('adm.orders') }}">Pedidos</a>
         <a href="{{ route('adm.coupons') }}" class="active">Cupons</a>
         <a href="{{ route('adm.reviews') }}">Avaliações</a>
-        <a href="{{ route('adm.coupons.create') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Cupom</a>
+        <a href="{{ route('adm.coupons.create') }}" class="btn btn-dark" style="margin-left: auto; padding: 8px 16px; font-size: 0.95em;">+ Novo Cupom</a>
     </nav>
 
     <div class="admin-action-bar" style="margin-bottom: 20px;">
@@ -132,11 +132,11 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('adm.coupons.edit', $coupon->id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                <a href="{{ route('adm.coupons.edit', $coupon->id) }}" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 0.875em;">Editar</a>
                                 <form action="{{ route('adm.coupons.destroy', $coupon->id) }}" method="POST" class="inline-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza?')">Deletar</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 12px; font-size: 0.875em;" onclick="return confirm('Tem certeza?')">Deletar</button>
                                 </form>
                             </div>
                         </td>

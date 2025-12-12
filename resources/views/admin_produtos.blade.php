@@ -27,7 +27,7 @@
                 <a href="{{ route('adm.orders') }}">Pedidos</a>
                 <a href="{{ route('adm.coupons') }}">Cupons</a>
                 <a href="{{ route('adm.reviews') }}">Avaliações</a>
-                <a href="{{ route('adm.produto.criar') }}" class="btn btn-dark" style="margin-left: auto;">+ Novo Produto</a>
+                <a href="{{ route('adm.produto.criar') }}" class="btn btn-dark" style="margin-left: auto; padding: 8px 16px; font-size: 0.95em;">+ Novo Produto</a>
             </nav>
 
             <div class="admin-action-bar">
@@ -105,11 +105,11 @@
                                 <td>{{ $product->created_at->format('d.m.Y') }} <span class="time">{{ $product->created_at->format('H:i') }}</span></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ route('adm.produto.editar', $product->id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                        <a href="{{ route('adm.produto.editar', $product->id) }}" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 0.875em;">Editar</a>
                                         <form action="{{ route('adm.produto.delete', $product->id) }}" method="POST" class="inline-form">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza?')">Deletar</button>
+                                            <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 12px; font-size: 0.875em;" onclick="return confirm('Tem certeza?')">Deletar</button>
                                         </form>
                                     </div>
                                 </td>
