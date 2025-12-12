@@ -153,16 +153,6 @@
 }
 
 /* --- ESTILOS PARA A BARRA DE MARCAS COM SCROLL (se aplicável neste ficheiro) --- */
-.brands-bar {
-  background-color: var(--color-dark);
-  color: var(--color-white);
-  padding: 15px 0;
-  font-weight: 600;
-  letter-spacing: 1px;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-}
 .brands-scroll-content {
   display: inline-block;
   animation: scrollBrands 20s linear infinite;
