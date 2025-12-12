@@ -37,14 +37,6 @@
         </div>
     @endif
 
-    <nav class="admin-tabs">
-        <a href="{{ route('adm.produto') }}">Em estoque</a>
-        <a href="{{ route('adm.usuarios') }}">Usuários</a>
-        <a href="{{ route('adm.orders') }}">Pedidos</a>
-        <a href="{{ route('adm.coupons') }}">Cupons</a>
-        <a href="{{ route('adm.reviews') }}" class="active">Avaliações</a>
-    </nav>
-
     <div class="admin-action-bar" style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
         <form method="GET" action="{{ route('adm.reviews') }}" style="display:flex; gap:10px; align-items:center; flex-wrap: wrap; width:100%;">
             <select name="status" style="padding:8px 12px; border:1px solid #ddd; border-radius:4px;">
