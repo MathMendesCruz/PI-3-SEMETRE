@@ -1241,4 +1241,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } // Fim do if (adminArea)
 
+    // --- HANDLER GLOBAL: BOTÕES 'VOLTAR' ---
+    // Garante que todos os botões com o atributo `data-history-back` executem
+    // um `history.back()` com fallback para `document.referrer` ou home.
+    try {
+        const backButtons = document.querySelectorAll('[data-history-back]');
+        if (backButtons && backButtons.length > 0) {
+            backButtons.forEach(btn => {
+                // evita duplicar listeners caso o script seja reinjetado
+                btn.removeEventListener('click', btn._historyBackHandler);
+                const handler = function(e) {
+                    e.preventDefault();
+                    // Se houver histórico, voltamos uma página
+                    if (window.history.length > 1) {
+                        window.history.back();
+                        return;
+                    }
+                    // Senão, usamos o referrer se disponível
+                    if (document.referrer) {
+                        window.location.href = document.referrer;
+                        return;
+                    }
+                    // Fallback final: ir para a home
+                    window.location.href = '/';
+                };
+                btn._historyBackHandler = handler;
+                btn.addEventListener('click', handler);
+            });
+        }
+    } catch (err) {
+        console.error('Erro ao vincular botões de voltar:', err);
+    }
+
 }); // Fim do addEventListener DOMContentLoaded
