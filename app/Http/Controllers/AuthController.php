@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -171,6 +172,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'current_password' => 'nullable|required_with:password',
             'password' => 'nullable|min:6|confirmed',
         ], [
@@ -192,6 +194,27 @@ class AuthController extends Controller
                 return back()->withErrors(['current_password' => 'Senha atual incorreta'])->withInput();
             }
             $user->password = Hash::make($request->password);
+        }
+
+        // Processar avatar se enviado
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            // Remover avatar antigo (se existir e estiver no disco public)
+            if ($user->avatar) {
+                // suporta caminhos armazenados como 'storage/avatars/...' ou 'avatars/...'
+                $oldPath = $user->avatar;
+                if (strpos($oldPath, 'storage/') === 0) {
+                    $oldPath = substr($oldPath, strlen('storage/'));
+                }
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Salvar novo arquivo no disk 'public' em 'avatars/'
+            $path = $file->store('avatars', 'public');
+            // Salvar caminho público (usaremos asset() no view)
+            $user->avatar = 'storage/' . $path;
         }
 
         $user->name = $request->name;

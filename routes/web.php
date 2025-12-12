@@ -64,6 +64,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pedidos', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/pedido-sucesso', [OrderController::class, 'success'])->name('order.success');
 
+    // Pagamentos (mock / integração)
+    Route::post('/payment/process', [\App\Http\Controllers\PaymentController::class, 'process'])->name('payment.process');
+    Route::post('/payment/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');
+
     // Rotas de Reviews
     Route::post('/produtos/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 

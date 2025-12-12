@@ -89,7 +89,17 @@
                     <div class="cart-item" data-id="{{ $item['id'] }}">
                         <div class="cart-item-info">
                             <div class="cart-item-img">
-                                <img src="{{ asset('img/' . $item['image']) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                                @php
+                                    $img = $item['image'] ?? '';
+                                    if (!$img) {
+                                        $src = asset('img/placeholder.svg');
+                                    } elseif (strpos($img, '/') === 0 || strpos($img, 'http') === 0) {
+                                        $src = $img;
+                                    } else {
+                                        $src = asset('img/' . $img);
+                                    }
+                                @endphp
+                                <img src="{{ $src }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('img/placeholder.svg') }}'">
                             </div>
                             <div class="cart-item-details">
                                 <h4>{{ $item['name'] }}</h4>

@@ -88,6 +88,30 @@
                                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
                         </div>
 
+                        <div id="card-fields" style="margin-top:20px; display:none;">
+                            <h4>Dados do Cartão</h4>
+                            <div style="margin-bottom:10px;">
+                                <label>Número do cartão</label>
+                                <input type="text" id="card_number" name="card_number" class="form-control" placeholder="0000 0000 0000 0000" />
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <div style="flex:2;">
+                                    <label>Nome no cartão</label>
+                                    <input type="text" id="card_holder" name="card_holder" class="form-control" />
+                                </div>
+                                <div style="flex:1;">
+                                    <label>Validade (MM/AA)</label>
+                                    <input type="text" id="card_expiry" name="card_expiry" class="form-control" placeholder="MM/AA" />
+                                </div>
+                                <div style="flex:1;">
+                                    <label>CVV</label>
+                                    <input type="text" id="card_cvv" name="card_cvv" class="form-control" placeholder="123" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="payment-result" style="margin-top:20px;"></div>
+
                         <button type="submit" class="btn btn-dark"
                                 style="width: 100%; padding: 15px; margin-top: 30px; font-size: 16px;">
                             Finalizar Compra
@@ -197,6 +221,19 @@
 </div>
 
 <script>
+async function postJSON(url, body) {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+    return res.json();
+}
+
 document.getElementById('checkout-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -204,31 +241,81 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
     const data = Object.fromEntries(formData);
 
     try {
-        const response = await fetch('{{ route('orders.store') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+        // 1) Criar o pedido
+        const createResult = await postJSON('{{ route('orders.store') }}', data);
 
-        const result = await response.json();
-
-        if (result.success) {
-            showNotification('Pedido realizado com sucesso!', 'success');
-            // Redireciona para página de sucesso com botão de feedback
-            setTimeout(() => {
-                window.location.href = result.redirect || '{{ route('order.success') }}';
-            }, 1500);
-        } else {
-            showNotification('Erro: ' + result.message, 'error');
+        if (!createResult.success) {
+            alert('Erro ao criar pedido: ' + (createResult.message || '')); return;
         }
+
+        const orderId = createResult.order_id;
+        const paymentMethod = data.payment_method;
+
+        // 2) Processar pagamento de forma mock via endpoint
+        const paymentPayload = { order_id: orderId, payment_method: paymentMethod };
+
+        // Se cartão, enviar também campos de cartão
+        if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card') {
+            paymentPayload.card_number = data.card_number || '';
+            paymentPayload.card_holder = data.card_holder || '';
+            paymentPayload.card_expiry = data.card_expiry || '';
+            paymentPayload.card_cvv = data.card_cvv || '';
+        }
+
+        const payResult = await postJSON('{{ route('payment.process') }}', paymentPayload);
+
+        if (!payResult.success) {
+            alert('Erro no pagamento: ' + (payResult.message || ''));
+            return;
+        }
+
+        // Se retorno com instruções (pix/boleto)
+        if (payResult.instructions) {
+            let html = '<h3>Instruções de Pagamento</h3>';
+            if (payResult.instructions.type === 'pix') {
+                html += '<p>PIX gerado:</p><pre>' + (payResult.instructions.code || '') + '</pre>';
+            } else if (payResult.instructions.type === 'boleto') {
+                html += '<p>Boleto vence em: ' + (payResult.instructions.due_date || '') + '</p>';
+                html += '<pre>' + (payResult.instructions.line || '') + '</pre>';
+            }
+            html += '<p>Seu pedido foi criado e está aguardando pagamento. Ao confirmar o pagamento, o pedido será atualizado.</p>';
+            document.getElementById('payment-result').innerHTML = html;
+            // Não redirecionar automaticamente para permitir que cliente copie instruções
+            return;
+        }
+
+        // Se pagamento simulado em cartão foi processado => redirecionar ao sucesso
+        if (payResult.success) {
+            window.location.href = createResult.redirect || '{{ route('order.success') }}';
+            return;
+        }
+
     } catch (error) {
         console.error('Erro:', error);
-        showNotification('Erro ao processar pedido', 'error');
+        alert('Erro ao processar pedido/pagamento');
     }
 });
+</script>
+<script>
+// Mostrar/ocultar campos de cartão conforme método selecionado
+document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        const cardFields = document.getElementById('card-fields');
+        if (this.value === 'credit_card' || this.value === 'debit_card') {
+            cardFields.style.display = 'block';
+        } else {
+            cardFields.style.display = 'none';
+        }
+    });
+});
+
+// Inicializar visibilidade (caso já haja um selecionado)
+(function(){
+    const selected = document.querySelector('input[name="payment_method"]:checked');
+    if (selected) {
+        const ev = new Event('change');
+        selected.dispatchEvent(ev);
+    }
+})();
 </script>
 @endsection

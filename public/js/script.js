@@ -334,12 +334,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cartItemsContainer.innerHTML = ''; // Limpa antes de adicionar
             cart.forEach(item => {
+                // Normaliza caminho da imagem: aceita URL absoluta, caminho iniciando com '/', ou apenas nome de arquivo
+                let imgSrc = item.img || '/img/placeholder.svg';
+                if (!(imgSrc.startsWith('/') || imgSrc.startsWith('http')) ) {
+                    imgSrc = '/img/' + imgSrc;
+                }
+
                 // ATENÇÃO: O HTML aqui deve ser IDÊNTICO ao que você usa em 'carrinho.html'
                 const itemHTML = `
                 <div class="cart-item" data-price="${item.price}" data-id="${item.id}">
                     <div class="cart-item-info">
                         <div class="cart-item-img">
-                            <img src="${item.img}" alt="${item.name}">
+                            <img src="${imgSrc}" alt="${item.name}" onerror="this.src='/img/placeholder.svg'">
                         </div>
                         <div class="cart-item-details">
                             <h4>${item.name}</h4>
