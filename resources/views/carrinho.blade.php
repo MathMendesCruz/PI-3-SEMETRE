@@ -77,7 +77,7 @@
                     <p class="coupon-message success" style="margin-top: 6px; color: #2e7d32;">{{ session('success') }}</p>
                 @endif
 
-                <button class="btn btn-dark btn-checkout" onclick="window.location.href='{{ route('checkout') }}'" style="margin-top: 16px;">
+                <button class="btn btn-dark btn-checkout" onclick="window.location.href='{{ route('pagamento') }}'" style="margin-top: 16px;">
                     Finalizar Compra &rarr;
                 </button>
             </aside>

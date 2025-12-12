@@ -39,13 +39,7 @@
                             </p>
                         </a>
                         @if($product->stock > 0)
-                            <button class="btn btn-dark add-to-cart-btn-hover"
-                                    data-product-id="{{ $product->id }}"
-                                    data-product-name="{{ $product->name }}"
-                                    data-product-price="{{ $product->price }}"
-                                    data-product-img="{{ asset('img/' . $product->image) }}">
-                                Adicionar ao Carrinho
-                            </button>
+                            <span class="out-of-stock" style="opacity:0;visibility:hidden;">&nbsp;</span>
                         @else
                             <span class="out-of-stock">Indisponível</span>
                         @endif
@@ -194,15 +188,7 @@
                             <span class="sale">R$ ${priceFormatted}</span>
                         </p>
                     </a>
-                    ${inStock ? `
-                        <button class="btn btn-dark add-to-cart-btn-hover"
-                                data-product-id="${product.id}"
-                                data-product-name="${product.name}"
-                                data-product-price="${product.price}"
-                                data-product-img="${imageUrl}">
-                            Adicionar ao Carrinho
-                        </button>
-                    ` : '<span class="out-of-stock">Indisponível</span>'}
+                    ${inStock ? `<span class="out-of-stock" style="opacity:0;visibility:hidden;">&nbsp;</span>` : '<span class="out-of-stock">Indisponível</span>'}
                 `;
                 gridContainer.appendChild(productCard);
             }

@@ -44,10 +44,6 @@ Route::post('/cart/validate-cep', [CartController::class, 'validateCep'])->name(
 
 // Rotas protegidas por autenticação
 Route::middleware('auth')->group(function () {
-    Route::get('/pagamento', function () {
-        return view('pagamento');
-    })->name('pagamento');
-
     Route::get('/checkout', function () {
         $cart = session()->get('cart', []);
         $coupon = session()->get('coupon');
@@ -116,6 +112,13 @@ Route::prefix('adm')->middleware(['auth', 'admin'])->name('adm.')->group(functio
 Route::get('/sobre', function () {
     return view('sobre');
 })->name('sobre');
+
+// Página de pagamento (pública; mostrará aviso se não logado)
+Route::get('/pagamento', function () {
+    $cart = session()->get('cart', []);
+    $coupon = session()->get('coupon');
+    return view('pagamento', compact('cart', 'coupon'));
+})->name('pagamento');
 
 Route::get('/suporte', function () {
     return view('suporte');
