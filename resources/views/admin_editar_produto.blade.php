@@ -4,9 +4,9 @@
 
 @section('breadcrumb', 'Editar Produto')
 
-@section('content') 
+@section('content')
 
-<div class="admin-card"> 
+<div class="admin-card">
             <h2>Editar Produto</h2>
             <p class="subtitle">Atualize as informações do produto: <strong>{{ $product->name }}</strong></p>
 
@@ -24,7 +24,7 @@
             <form action="{{ route('adm.produto.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="admin-form product-form-layout">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="form-fields">
                     <div class="form-group">
                         <label for="name">Nome do Produto *</label>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Preço (R$) *</label>
-                        <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" step="0.01" required placeholder="Ex: 500.00"> 
+                        <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" step="0.01" required placeholder="Ex: 500.00">
                         @error('price')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-group">
@@ -70,9 +70,16 @@
                     </div>
                     <div class="form-group">
                         <label for="stock">Quantidade em Estoque *</label>
-                        <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" required placeholder="Ex: 10" min="0"> 
+                        <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" required placeholder="Ex: 10" min="0">
                         @error('stock')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
-                    </div> 
+                    </div>
+
+                    <div class="form-group">
+                        <label for="min_stock">Estoque Mínimo (Baixo saldo)</label>
+                        <input type="number" id="min_stock" name="min_stock" value="{{ old('min_stock', $product->min_stock) }}" placeholder="Ex: 5" min="0">
+                        <small style="color: #666; display: block; margin-top: 0.25rem;">Quando o estoque for menor ou igual a este valor, o produto aparece como baixo saldo.</small>
+                        @error('min_stock')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
+                    </div>
 
                 </div>
 
@@ -82,12 +89,12 @@
                          <p style="margin-top: 10px; font-size: 0.9em; color: #999;">As imagens serão geradas automaticamente com base no tipo de produto</p>
                      </div>
                      <label for="product_image" class="btn btn-dark">Carregar Imagem (Opcional)</label>
-                     <input type="file" id="product_image" name="image" accept="image/*" style="display: none;"> 
+                     <input type="file" id="product_image" name="image" accept="image/*" style="display: none;">
                 </div>
 
                 <div class="form-actions">
                      <button type="submit" class="btn btn-primary">Atualizar Produto</button>
-                     <a href="{{ route('adm.produto') }}" class="btn btn-secondary">Cancelar</a> 
+                     <a href="{{ route('adm.produto') }}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>

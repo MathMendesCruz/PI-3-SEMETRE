@@ -55,10 +55,6 @@
                 <p class="description">
                     {{ $product->description ?? 'Descrição não disponível para este produto.' }}
                 </p>
-                <div class="color-selector">
-                    <span class="color-swatch active" style="background-color: #d1d5db;" title="Prata"></span>
-                    <span class="color-swatch" style="background-color: #fde047;" title="Ouro"></span>
-                </div>
                 <div class="controls">
                     <div class="quantity-selector">
                         <button class="qty-btn qty-minus" type="button">-</button>
@@ -120,11 +116,6 @@
                     <p>Aqui vão as perguntas e respostas frequentes sobre o produto.</p>
                 </div>
             </div>
-        </section>
-
-        <section class="container related-products-section"> <h2 class="section-title">Destaques para você</h2>
-            <div class="product-grid" id="related-products-grid">
-                </div>
         </section>
 
     </div>

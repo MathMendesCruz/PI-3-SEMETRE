@@ -61,8 +61,9 @@
                                 <td>{{ $product->brand ?? '-' }}</td>
                                 <td>{{ $product->id }}</td>
                                 <td>R$ {{ number_format($product->price, 2, ',', '.') }}</td>
+                                @php($threshold = $product->min_stock ?? 5)
                                 <td>
-                                    <span class="stock-badge {{ $product->stock < 5 ? 'stock-low' : 'stock-ok' }}">
+                                    <span class="stock-badge {{ $product->stock <= $threshold ? 'stock-low' : 'stock-ok' }}">
                                         {{ $product->stock }}
                                     </span>
                                 </td>

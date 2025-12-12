@@ -14,7 +14,7 @@
         </div>
     @else
         <h1 style="margin-bottom: 10px;">Finalizar Compra</h1>
-        <p style="color: #666; margin-bottom: 30px;">Pedido #{{ uniqid() }}</p>
+        <p style="color: #666; margin-bottom: 30px;">Revise seus dados e conclua o pagamento.</p>
 
         @php
             $cart = session('cart', []);

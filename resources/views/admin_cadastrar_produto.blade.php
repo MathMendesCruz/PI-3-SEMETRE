@@ -90,6 +90,13 @@
                         @error('stock')<span class="error-text">{{ $message }}</span>@enderror
                     </div>
 
+                    <div class="form-group">
+                        <label for="min_stock">Estoque Mínimo (Baixo saldo)</label>
+                        <input type="number" id="min_stock" name="min_stock" value="{{ old('min_stock') }}" placeholder="Ex: 5" min="0">
+                        <small class="form-help-text">Quando o estoque for menor ou igual a este valor, o produto aparece como baixo saldo.</small>
+                        @error('min_stock')<span class="error-text">{{ $message }}</span>@enderror
+                    </div>
+
                 </div>
 
                 <div class="image-upload-area">
