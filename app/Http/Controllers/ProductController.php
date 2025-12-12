@@ -14,7 +14,7 @@ class ProductController extends Controller
         $reviews = Review::with('user')
             ->where('approved', true)
             ->orderBy('created_at', 'desc')
-            ->limit(6)
+            ->limit(3)
             ->get();
 
         // Buscar marcas únicas dos produtos
