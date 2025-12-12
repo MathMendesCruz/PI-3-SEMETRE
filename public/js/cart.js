@@ -79,20 +79,28 @@ async function updateCartItem(productId, quantity) {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             credentials: 'same-origin',
             body: JSON.stringify({ quantity })
         });
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (err) {
+            const text = await response.text().catch(() => null);
+            console.warn('Resposta não-JSON em updateCartItem:', response.status, text);
+            showNotification('Erro ao atualizar o carrinho', 'error');
+            return;
+        }
 
-        const data = await response.json();
-
-        if (data.success) {
+        if (data && data.success) {
             showNotification('Carrinho atualizado!', 'success');
             // Recarregar página do carrinho
             location.reload();
         } else {
-            showNotification(data.message || 'Erro ao atualizar', 'error');
+            showNotification((data && data.message) || 'Erro ao atualizar', 'error');
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -113,18 +121,27 @@ async function removeFromCart(productId) {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             credentials: 'same-origin'
         });
 
-        const data = await response.json();
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (err) {
+            const text = await response.text().catch(() => null);
+            console.warn('Resposta não-JSON em removeFromCart:', response.status, text);
+            showNotification('Erro ao remover produto', 'error');
+            return;
+        }
 
-        if (data.success) {
+        if (data && data.success) {
             showNotification('Produto removido!', 'success');
             location.reload();
         } else {
-            showNotification(data.message || 'Erro ao remover', 'error');
+            showNotification((data && data.message) || 'Erro ao remover', 'error');
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -150,7 +167,8 @@ async function applyCoupon() {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             credentials: 'same-origin',
             body: JSON.stringify({ code })
@@ -161,18 +179,21 @@ async function applyCoupon() {
             return;
         }
 
-        const data = await response.json().catch(() => null);
-
-        if (!data) {
-            showNotification('Não foi possível aplicar o cupom. Faça login e tente novamente.', 'warning');
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (err) {
+            const text = await response.text().catch(() => null);
+            console.warn('Resposta não-JSON em applyCoupon:', response.status, text);
+            showNotification('Não foi possível aplicar o cupom. Tente novamente.', 'warning');
             return;
         }
 
-        if (data.success) {
+        if (data && data.success) {
             showNotification('Cupom aplicado com sucesso!', 'success');
             location.reload();
         } else {
-            showNotification(data.message || 'Cupom inválido', 'error');
+            showNotification((data && data.message) || 'Cupom inválido', 'error');
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -198,13 +219,22 @@ async function validateCep() {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             credentials: 'same-origin',
             body: JSON.stringify({ cep })
         });
 
-        const data = await response.json();
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (err) {
+            const text = await response.text().catch(() => null);
+            console.warn('Resposta não-JSON em validateCep:', response.status, text);
+            showNotification('Erro ao validar CEP', 'error');
+            return;
+        }
 
         if (data.success) {
             // Preencher campos de endereço

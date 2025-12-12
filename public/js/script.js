@@ -602,19 +602,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add to cart button na página de detalhe
         const addToCartBtnDetail = productPage.querySelector('.add-to-cart-btn');
         if (addToCartBtnDetail) {
-            addToCartBtnDetail.addEventListener('click', (e) => {
+            addToCartBtnDetail.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const productId = addToCartBtnDetail.dataset.productId;
                 const quantity = parseInt(qtyValue?.textContent || '1');
 
                 console.log(`Adicionando ${quantity}x produto ${productId} ao carrinho`);
 
-                // Adiciona a quantidade especificada
-                for (let i = 0; i < quantity; i++) {
-                    addItemToCart(productId);
+                // Preferir usar a API do servidor (se disponível). Caso a API não exista
+                // ou retorne falha, usamos o LocalStorage como fallback.
+                if (typeof window.addToCart === 'function') {
+                    try {
+                        const success = await window.addToCart(productId, quantity);
+                        if (!success) {
+                            for (let i = 0; i < quantity; i++) addItemToCart(productId);
+                        }
+                    } catch (err) {
+                        console.error('Erro ao chamar addToCart do servidor:', err);
+                        for (let i = 0; i < quantity; i++) addItemToCart(productId);
+                    }
+                } else {
+                    for (let i = 0; i < quantity; i++) addItemToCart(productId);
                 }
 
-                // Feedback
+                // Feedback visual
                 const originalText = addToCartBtnDetail.textContent;
                 addToCartBtnDetail.textContent = 'Adicionado!';
                 addToCartBtnDetail.style.background = 'var(--color-verified-green)';

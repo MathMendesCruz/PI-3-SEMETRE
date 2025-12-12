@@ -28,9 +28,59 @@
     <h1 class="section-title" style="text-align: left; margin-top: 0; margin-bottom: var(--space-xl);">Seu carrinho</h1>
 
     @if(empty($cartItems))
-        <div style="text-align: center; padding: 60px 20px; border: 1px dashed #ddd; border-radius: 10px;">
-            <p style="margin-bottom: 16px; color: #666;">Seu carrinho está vazio.</p>
-            <a href="{{ route('index') }}" class="btn btn-dark">Voltar às compras</a>
+        <div class="cart-layout">
+            <section class="cart-items" id="cart-items">
+                <!-- Carrinho vazio no backend; o JS client-side irá popular a partir do LocalStorage -->
+            </section>
+
+            <aside class="cart-summary">
+                <h2>Resumo</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span class="value" id="subtotal">R$ {{ number_format($subtotal, 2, ',', '.') }}</span>
+                </div>
+                <div class="summary-row">
+                    <span id="discount-label">Desconto</span>
+                    <span class="value discount" id="discount">-R$ {{ number_format($discount, 2, ',', '.') }}</span>
+                </div>
+
+                <hr>
+
+                <div class="shipping-calculator">
+                    <label for="postal-code" class="shipping-label">Calcular Frete</label>
+                    <div class="cep-form">
+                        <input type="text" id="postal-code" placeholder="Digite seu CEP" maxlength="9">
+                        <button type="button" id="validate-cep-btn">Calcular</button>
+                    </div>
+                    <p class="shipping-message" id="shipping-message"></p>
+                </div>
+
+                <div class="summary-row shipping-row">
+                    <span>Frete</span>
+                    <span class="value" id="shipping-cost">R$ {{ number_format($shipping, 2, ',', '.') }}</span>
+                </div>
+                <hr>
+
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span class="value" id="total">R$ {{ number_format($total, 2, ',', '.') }}</span>
+                </div>
+
+                <div class="coupon-form" style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" id="coupon-code" placeholder="Adicionar cupom" value="{{ $coupon['code'] ?? '' }}" style="flex: 1;">
+                    <button type="button" id="apply-coupon-btn">Aplicar</button>
+                </div>
+                @if(session('error'))
+                    <p class="coupon-message error" style="margin-top: 6px; color: #c00;">{{ session('error') }}</p>
+                @endif
+                @if(session('success'))
+                    <p class="coupon-message success" style="margin-top: 6px; color: #2e7d32;">{{ session('success') }}</p>
+                @endif
+
+                <button class="btn btn-dark btn-checkout" onclick="window.location.href='{{ route('checkout') }}'" style="margin-top: 16px;">
+                    Finalizar Compra &rarr;
+                </button>
+            </aside>
         </div>
     @else
         <div class="cart-layout" data-backend-cart="true">
