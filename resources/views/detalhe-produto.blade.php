@@ -16,18 +16,30 @@
 
         <section class="product-details-layout">
             <div class="product-gallery">
+                @php
+                    $pimg = $product->image ?? '';
+                    if (!$pimg) {
+                        $pimgSrc = '/img/placeholder.svg';
+                    } elseif (strpos($pimg, '/') === 0 || strpos($pimg, 'http') === 0) {
+                        $pimgSrc = $pimg;
+                    } elseif (strpos($pimg, 'img/') === 0) {
+                        $pimgSrc = '/' . $pimg;
+                    } else {
+                        $pimgSrc = '/img/' . $pimg;
+                    }
+                @endphp
                 <div class="main-image">
-                    <img src="{{ asset('img/' . $product->image) }}"
+                    <img src="{{ $pimgSrc }}"
                          alt="{{ $product->name }}"
-                         onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                         onerror="this.src='/img/placeholder.svg'">
                 </div>
                 <div class="thumbnail-images">
-                    <img src="{{ asset('img/' . $product->image) }}"
+                    <img src="{{ $pimgSrc }}"
                          alt="{{ $product->name }}"
-                         onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                         onerror="this.src='/img/placeholder.svg'">
                 </div>
             </div>
-            <div class="product-info" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}" data-product-price="{{ $product->price }}" data-product-image="{{ asset('img/' . $product->image) }}">
+            <div class="product-info" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}" data-product-price="{{ $product->price }}" data-product-image="{{ $pimgSrc }}">
                 <h1>{{ $product->name }}</h1>
                 <div class="rating-price">
                     <div class="rating">

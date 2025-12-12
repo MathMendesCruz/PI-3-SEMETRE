@@ -70,12 +70,24 @@
 
             <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
                 @forelse($products as $product)
+                    @php
+                        $pimg = $product->image ?? '';
+                        if (!$pimg) {
+                            $pimgSrc = '/img/placeholder.svg';
+                        } elseif (strpos($pimg, '/') === 0 || strpos($pimg, 'http') === 0) {
+                            $pimgSrc = $pimg;
+                        } elseif (strpos($pimg, 'img/') === 0) {
+                            $pimgSrc = '/' . $pimg;
+                        } else {
+                            $pimgSrc = '/img/' . $pimg;
+                        }
+                    @endphp
                     <a href="{{ route('produto', ['id' => $product->id]) }}" class="product-card" style="text-decoration: none; color: inherit;">
                         <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.3s;">
-                            <img src="{{ asset('img/' . $product->image) }}"
+                            <img src="{{ $pimgSrc }}"
                                  alt="{{ $product->name }}"
                                  style="width: 100%; height: 250px; object-fit: cover;"
-                                 onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                                 onerror="this.src='/img/placeholder.svg'">
                             <div style="padding: 15px;">
                                 <h3 style="font-size: 16px; margin-bottom: 8px;">{{ $product->name }}</h3>
                                 <p style="color: #666; font-size: 14px; margin-bottom: 10px;">{{ Str::limit($product->description, 60) }}</p>

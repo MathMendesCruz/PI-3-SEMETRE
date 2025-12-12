@@ -92,14 +92,16 @@
                                 @php
                                     $img = $item['image'] ?? '';
                                     if (!$img) {
-                                        $src = asset('img/placeholder.svg');
+                                        $src = '/img/placeholder.svg';
                                     } elseif (strpos($img, '/') === 0 || strpos($img, 'http') === 0) {
                                         $src = $img;
+                                    } elseif (strpos($img, 'img/') === 0) {
+                                        $src = '/' . $img;
                                     } else {
-                                        $src = asset('img/' . $img);
+                                        $src = '/img/' . $img;
                                     }
                                 @endphp
-                                <img src="{{ $src }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                                <img src="{{ $src }}" alt="{{ $item['name'] }}" onerror="this.src='/img/placeholder.svg'">
                             </div>
                             <div class="cart-item-details">
                                 <h4>{{ $item['name'] }}</h4>

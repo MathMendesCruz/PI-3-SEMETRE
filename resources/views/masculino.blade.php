@@ -81,11 +81,23 @@
                             elseif (str_contains($nameLower, 'corrente')) { $type = 'corrente'; }
                             elseif (str_contains($nameLower, 'relógio') || str_contains($nameLower, 'relogio')) { $type = 'relogio'; }
                         @endphp
+                        @php
+                            $pimg = $product->image ?? '';
+                            if (!$pimg) {
+                                $pimgSrc = '/img/placeholder.svg';
+                            } elseif (strpos($pimg, '/') === 0 || strpos($pimg, 'http') === 0) {
+                                $pimgSrc = $pimg;
+                            } elseif (strpos($pimg, 'img/') === 0) {
+                                $pimgSrc = '/' . $pimg;
+                            } else {
+                                $pimgSrc = '/img/' . $pimg;
+                            }
+                        @endphp
                         <div class="product-card" data-productid="{{ $product->id }}" data-price="{{ $product->price }}" data-color="{{ $product->color ?? 'neutro' }}" data-type="{{ $type }}" data-brand="{{ $product->brand }}">
                             <a href="{{ route('produto', ['id' => $product->id]) }}" class="product-card-link">
-                                <img src="{{ asset('img/' . $product->image) }}"
+                                <img src="{{ $pimgSrc }}"
                                      alt="{{ $product->name }}"
-                                     onerror="this.src='{{ asset('img/placeholder.svg') }}'">
+                                     onerror="this.src='/img/placeholder.svg'">
                                 <h3>{{ $product->name }}</h3>
                                 <p class="price">
                                     <span class="sale">R$ {{ number_format($product->price, 2, ',', '.') }}</span>
@@ -103,7 +115,7 @@
                                     data-product-id="{{ $product->id }}"
                                     data-product-name="{{ $product->name }}"
                                     data-product-price="{{ $product->price }}"
-                                    data-product-img="{{ asset('img/' . $product->image) }}">
+                                    data-product-img="{{ $pimgSrc }}">
                                 Adicionar ao Carrinho
                             </button>
                             @endif
