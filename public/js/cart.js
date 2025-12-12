@@ -10,6 +10,8 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
  * Adiciona produto ao carrinho
  */
 async function addToCart(productId, quantity = 1, productData = null) {
+    console.log('addToCart chamado:', { productId, quantity, productData });
+
     try {
         const response = await fetch('/cart/add', {
             method: 'POST',
@@ -24,6 +26,8 @@ async function addToCart(productId, quantity = 1, productData = null) {
             })
         });
 
+        console.log('Response status:', response.status);
+
         // Se não estiver autenticado, o Laravel redireciona para login
         if (response.redirected) {
             window.location.href = response.url;
@@ -32,6 +36,8 @@ async function addToCart(productId, quantity = 1, productData = null) {
 
         // Algumas respostas de erro podem não ser JSON (ex: página HTML)
         const data = await response.json().catch(() => null);
+
+        console.log('Response data:', data);
 
         if (!data) {
             showNotification('Não foi possível adicionar ao carrinho. Faça login para continuar.', 'warning');
@@ -281,9 +287,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!button) return;
 
         e.preventDefault();
+        e.stopPropagation();
 
         const productId = button.dataset.productId || button.getAttribute('data-product-id');
-        const quantityElement = button.closest('.product-info, .product-card')?.querySelector('.quantity-value');
+
+        // Buscar quantity-value: primeiro no mesmo container, depois na página toda
+        let quantityElement = button.closest('.product-info, .product-card, .controls')?.querySelector('.quantity-value');
+        if (!quantityElement) {
+            quantityElement = button.parentElement?.querySelector('.quantity-value');
+        }
+        if (!quantityElement) {
+            quantityElement = document.querySelector('.quantity-value');
+        }
+
         const quantity = quantityElement ? parseInt(quantityElement.textContent) : 1;
 
         if (!productId) {
