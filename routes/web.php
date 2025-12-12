@@ -28,23 +28,19 @@ Route::controller(AuthController::class)->middleware('guest')->group(function ()
 # Logout (protegido)
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-// Rotas de Carrinho (protegidas por autenticação)
-Route::middleware('auth')->group(function () {
-    // Página do carrinho (apenas logado)
-    Route::get('/carrinho', function () {
-        $cart = session()->get('cart', []);
-        $coupon = session()->get('coupon');
-        return view('carrinho', compact('cart', 'coupon'));
-    })->name('carrinho');
+// Rotas de Carrinho (acesso livre — usa sessão e fallback para localStorage)
+Route::get('/carrinho', function () {
+    $cart = session()->get('cart', []);
+    $coupon = session()->get('coupon');
+    return view('carrinho', compact('cart', 'coupon'));
+})->name('carrinho');
 
-    // APIs do carrinho (apenas logado)
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-    Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
-    Route::post('/cart/validate-cep', [CartController::class, 'validateCep'])->name('cart.validateCep');
-});
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
+Route::post('/cart/validate-cep', [CartController::class, 'validateCep'])->name('cart.validateCep');
 
 // Rotas protegidas por autenticação
 Route::middleware('auth')->group(function () {

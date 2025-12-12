@@ -100,6 +100,9 @@
                                     } else {
                                         $src = '/img/' . $img;
                                     }
+
+                                    // Codifica espaços para evitar 404 em imagens com nome/pasta contendo espaços
+                                    $src = str_replace(' ', '%20', $src);
                                 @endphp
                                 <img src="{{ $src }}" alt="{{ $item['name'] }}" onerror="this.src='/img/placeholder.svg'">
                             </div>

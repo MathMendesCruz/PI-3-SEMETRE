@@ -355,6 +355,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     imgSrc = '/img/' + imgSrc;
                 }
 
+                // Codifica espaços para evitar 404 em nomes/pastas com espaço
+                imgSrc = imgSrc.replace(/\s/g, '%20');
+
                 // ATENÇÃO: O HTML aqui deve ser IDÊNTICO ao que você usa em 'carrinho.html'
                 const itemHTML = `
                 <div class="cart-item" data-price="${item.price}" data-id="${item.id}">
