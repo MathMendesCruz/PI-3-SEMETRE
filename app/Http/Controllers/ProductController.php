@@ -14,14 +14,14 @@ class ProductController extends Controller
         $reviews = Review::with('user')
             ->where('approved', true)
             ->orderBy('created_at', 'desc')
-            ->limit(6)
+            ->limit(3)
             ->get();
 
         // Se não houver aprovadas, mostra as mais recentes para não zerar o bloco de feedback
         if ($reviews->isEmpty()) {
             $reviews = Review::with('user')
                 ->orderBy('created_at', 'desc')
-                ->limit(6)
+                ->limit(3)
                 ->get();
         }
 

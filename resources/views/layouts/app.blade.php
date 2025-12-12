@@ -11,7 +11,7 @@
     @yield('extra-styles')
     @yield('head')
 </head>
-<body>
+<body data-user-logged="{{ auth()->check() ? '1' : '0' }}">
     @include('partials.top-bar')
     @include('partials.header')
 
