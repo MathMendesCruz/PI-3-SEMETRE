@@ -79,7 +79,7 @@ class ReviewController extends Controller
 
     public function index()
     {
-        $status = request('status', 'pending');
+        $status = request('status', 'all');
         $rating = request('rating');
         $search = request('search');
 
