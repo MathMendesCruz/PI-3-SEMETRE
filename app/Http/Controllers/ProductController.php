@@ -16,7 +16,7 @@ class ProductController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(6)
             ->get();
-        
+
         // Buscar marcas únicas dos produtos
         $brands = Product::whereNotNull('brand')
             ->distinct()
@@ -24,7 +24,7 @@ class ProductController extends Controller
             ->filter()
             ->values()
             ->toArray();
-        
+
         return view('index', compact('products', 'reviews', 'brands'));
     }
 
