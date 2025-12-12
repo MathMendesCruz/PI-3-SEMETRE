@@ -1,4 +1,17 @@
 /* css/atomic/templates/_layout.css */
+html, body {
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
