@@ -175,12 +175,24 @@
                     ? `{{ asset('img') }}/${product.image}`
                     : `{{ asset('img') }}/${availableImages[i % availableImages.length]}`;
 
+                const priceFormatted = parseFloat(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const inStock = product.stock > 0;
+
                 productLink.innerHTML = `
                     <img src="${imageUrl}" alt="${product.name}">
                     <h3>${product.name}</h3>
                     <p class="price">
-                        <span class="sale">R$ ${parseFloat(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span class="sale">R$ ${priceFormatted}</span>
                     </p>
+                    ${inStock ? `
+                        <button class="btn btn-dark add-to-cart-btn-hover"
+                                data-product-id="${product.id}"
+                                data-product-name="${product.name}"
+                                data-product-price="${product.price}"
+                                data-product-img="${imageUrl}">
+                            Adicionar ao Carrinho
+                        </button>
+                    ` : '<span class="out-of-stock">Indisponível</span>'}
                 `;
                 gridContainer.appendChild(productLink);
             }

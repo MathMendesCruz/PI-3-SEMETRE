@@ -2,10 +2,11 @@
 
 .dashboard-navigation {
   display: grid;
-  /* Cria colunas flexíveis, com no mínimo 200px e máximo 1fr (espaço igual) */
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-  gap: 1.5rem; /* Espaço entre os cards */
-  margin-top: 2rem; /* Espaço após o subtítulo */
+  /* Colunas mais compactas para evitar quebra do último card */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+  grid-auto-flow: row dense; /* Preenche espaços vazios na linha */
 }
 
 .dashboard-link-card {
@@ -23,11 +24,11 @@
 .dashboard-link-card:hover {
   transform: translateY(-4px); /* Efeito sutil de levantar */
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada */
-  color: var(--admin-primary-color, #0d6efd); /* Muda cor do texto no hover */
+  color: var(--admin-primary-color, var(--color-primary)); /* Muda cor do texto no hover */
 }
 
 .dashboard-link-card i {
-  color: var(--admin-primary-color, #0d6efd); /* Cor do ícone */
+  color: var(--admin-primary-color, var(--color-primary)); /* Cor do ícone */
   margin-bottom: 0.75rem;
   display: block; /* Garante que fique acima do texto */
 }
