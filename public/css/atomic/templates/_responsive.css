@@ -9,7 +9,7 @@
 /* TELAS GRANDES (acima de 1600px) */
 @media (min-width: 1600px) {
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 24px;
     }
 }
@@ -17,7 +17,7 @@
 /* DESKTOP MÉDIO (1200px - 1600px) */
 @media (max-width: 1600px) and (min-width: 1200px) {
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
     }
 }
@@ -29,7 +29,7 @@
     }
 
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: var(--space-md);
     }
 
@@ -65,7 +65,7 @@
 
     /* Product Grid */
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: var(--space-sm);
     }
 
@@ -202,7 +202,7 @@
 
     /* Product Grid */
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: 1fr;
         gap: var(--space-md);
     }
 

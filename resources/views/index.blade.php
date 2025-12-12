@@ -27,7 +27,7 @@
         <section class="container">
             <h2 class="section-title">Novidades</h2>
             <div class="product-grid" id="product-grid-container" data-inline-load-more="true">
-                @forelse($products->take(6) as $product)
+                @forelse($products->take(8) as $product)
                     <div class="product-card" data-productid="{{ $product->id }}">
                         <a href="{{ route('produto', ['id' => $product->id]) }}" style="text-decoration: none; color: inherit;">
                             <img src="{{ asset('img/' . $product->image) }}"
@@ -146,7 +146,7 @@
         // ===== VER MAIS PRODUTOS =====
         // Dados de todos os produtos passados do PHP para JS
         const allProducts = @json($products);
-        const productsPerPage = 6;
+        const productsPerPage = 4;
         let currentIndex = productsPerPage;
 
         // Array de imagens disponíveis para usar como fallback

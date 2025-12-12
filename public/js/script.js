@@ -21,37 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeTopBarBtn) { closeTopBarBtn.addEventListener('click', () => { closeTopBarBtn.parentElement.style.display = 'none'; }); }
 
     // --- Menu do Usuário (preview de login/conta) ---
-    const userMenus = document.querySelectorAll('.user-menu');
-
-    const closeAllUserMenus = () => {
-        userMenus.forEach(menu => {
-            menu.classList.remove('open');
-            const toggle = menu.querySelector('.user-menu-toggle');
-            const dropdown = menu.querySelector('.user-menu-dropdown');
-            if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
-            if (dropdown) { dropdown.setAttribute('aria-hidden', 'true'); }
-        });
-    };
-
-    userMenus.forEach(menu => {
-        const toggle = menu.querySelector('.user-menu-toggle');
-        const dropdown = menu.querySelector('.user-menu-dropdown');
-        if (!toggle || !dropdown) { return; }
-
-        toggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const willOpen = !menu.classList.contains('open');
-            closeAllUserMenus();
-            menu.classList.toggle('open', willOpen);
-            toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-            dropdown.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
-        });
-
-        dropdown.addEventListener('click', (e) => e.stopPropagation());
-    });
-
-    document.addEventListener('click', () => closeAllUserMenus());
+    // NOTA: Lógica do user-menu agora está no header.blade.php
+    // para evitar conflitos de múltiplos event listeners
 
 
     // --- NOVA LÓGICA DO CARRINHO GLOBAL (LocalStorage) ---

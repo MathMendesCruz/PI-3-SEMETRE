@@ -59,54 +59,69 @@
 <script>
 // Menu do usuário - toggle com fallback
 (function() {
-    const menus = document.querySelectorAll('.user-menu');
-
-    function closeAll() {
-        menus.forEach(m => {
-            m.classList.remove('open');
-            const t = m.querySelector('.user-menu-toggle');
-            const d = m.querySelector('.user-menu-dropdown');
-            if (t) t.setAttribute('aria-expanded', 'false');
-            if (d) d.setAttribute('aria-hidden', 'true');
-        });
+    // Aguarda o DOM estar pronto se necessário
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 
-    menus.forEach(menu => {
-        const toggle = menu.querySelector('.user-menu-toggle');
-        const dropdown = menu.querySelector('.user-menu-dropdown');
+    function init() {
+        const menus = document.querySelectorAll('.user-menu');
 
-        if (!toggle || !dropdown) {
-            console.warn('user-menu: toggle ou dropdown não encontrado');
+        if (menus.length === 0) {
+            console.warn('Nenhum elemento .user-menu encontrado');
             return;
         }
 
-        // Click no botão toggle
-        toggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        function closeAll() {
+            menus.forEach(m => {
+                m.classList.remove('open');
+                const t = m.querySelector('.user-menu-toggle');
+                const d = m.querySelector('.user-menu-dropdown');
+                if (t) t.setAttribute('aria-expanded', 'false');
+                if (d) d.setAttribute('aria-hidden', 'true');
+            });
+        }
 
-            const isOpen = menu.classList.contains('open');
-            closeAll();
+        menus.forEach(menu => {
+            const toggle = menu.querySelector('.user-menu-toggle');
+            const dropdown = menu.querySelector('.user-menu-dropdown');
 
-            if (!isOpen) {
-                menu.classList.add('open');
-                toggle.setAttribute('aria-expanded', 'true');
-                dropdown.setAttribute('aria-hidden', 'false');
-                console.log('Menu aberto');
+            if (!toggle || !dropdown) {
+                console.warn('user-menu: toggle ou dropdown não encontrado', menu);
+                return;
             }
+
+            // Click no botão toggle
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isOpen = menu.classList.contains('open');
+                closeAll();
+
+                if (!isOpen) {
+                    menu.classList.add('open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    dropdown.setAttribute('aria-hidden', 'false');
+                }
+            });
+
+            // Evitar fechar ao clicar dentro do dropdown
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
         });
 
-        // Evitar fechar ao clicar dentro do dropdown
-        dropdown.addEventListener('click', (e) => e.stopPropagation());
-    });
-
-    // Fechar ao clicar fora
-    document.addEventListener('click', (e) => {
-        const target = e.target;
-        const isMenu = target.closest('.user-menu');
-        if (!isMenu) {
-            closeAll();
-        }
-    });
+        // Fechar ao clicar fora - apenas uma vez no documento
+        document.addEventListener('click', (e) => {
+            const target = e.target;
+            const isMenu = target.closest('.user-menu');
+            if (!isMenu) {
+                closeAll();
+            }
+        });
+    }
 })();
 </script>
