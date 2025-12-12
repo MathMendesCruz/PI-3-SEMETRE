@@ -68,10 +68,10 @@ main {
 }
 
 /* Utilitário para tempo dentro da tabela */
-.time { 
-    display: block; 
-    font-size: 0.8em; 
-    color: var(--admin-secondary-text); 
+.time {
+    display: block;
+    font-size: 0.8em;
+    color: var(--admin-secondary-text);
 }
 
 /* ===== RESPONSIVIDADE ===== */
