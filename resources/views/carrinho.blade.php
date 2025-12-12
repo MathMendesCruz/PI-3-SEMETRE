@@ -4,8 +4,7 @@
 
 @section('content')
 @php
-    $cartItems = session('cart', []);
-    $coupon = session('coupon');
+    $cartItems = $cart ?? [];
     $subtotal = 0;
     foreach ($cartItems as $item) {
         $subtotal += $item['price'] * $item['quantity'];

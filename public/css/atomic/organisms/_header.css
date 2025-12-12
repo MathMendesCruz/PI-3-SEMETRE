@@ -249,12 +249,17 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
   padding: 12px 14px;
-  display: none;
-  z-index: 20;
+  display: none !important;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .user-menu.open .user-menu-dropdown {
-  display: block;
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
 }
 
 .menu-user-welcome {

@@ -59,18 +59,24 @@
 <script>
 // Menu do usuário - toggle com fallback
 (function() {
+    console.log('[USER-MENU] Script carregado');
+
     // Aguarda o DOM estar pronto se necessário
     if (document.readyState === 'loading') {
+        console.log('[USER-MENU] Aguardando DOMContentLoaded...');
         document.addEventListener('DOMContentLoaded', init);
     } else {
+        console.log('[USER-MENU] DOM já está pronto, inicializando...');
         init();
     }
 
     function init() {
+        console.log('[USER-MENU] Inicializando...');
         const menus = document.querySelectorAll('.user-menu');
+        console.log('[USER-MENU] Menus encontrados:', menus.length);
 
         if (menus.length === 0) {
-            console.warn('Nenhum elemento .user-menu encontrado');
+            console.warn('[USER-MENU] Nenhum elemento .user-menu encontrado');
             return;
         }
 
@@ -84,27 +90,41 @@
             });
         }
 
-        menus.forEach(menu => {
+        menus.forEach((menu, index) => {
             const toggle = menu.querySelector('.user-menu-toggle');
             const dropdown = menu.querySelector('.user-menu-dropdown');
 
+            console.log(`[USER-MENU] Menu ${index}:`, {
+                toggle: !!toggle,
+                dropdown: !!dropdown
+            });
+
             if (!toggle || !dropdown) {
-                console.warn('user-menu: toggle ou dropdown não encontrado', menu);
+                console.warn('[USER-MENU] Toggle ou dropdown não encontrado no menu', index, menu);
                 return;
             }
 
+            console.log(`[USER-MENU] Adicionando listener ao menu ${index}`);
+
             // Click no botão toggle
             toggle.addEventListener('click', function(e) {
+                console.log('[USER-MENU] Toggle clicado!');
                 e.preventDefault();
                 e.stopPropagation();
 
                 const isOpen = menu.classList.contains('open');
+                console.log('[USER-MENU] Estado antes:', isOpen ? 'aberto' : 'fechado');
+
                 closeAll();
 
                 if (!isOpen) {
                     menu.classList.add('open');
                     toggle.setAttribute('aria-expanded', 'true');
                     dropdown.setAttribute('aria-hidden', 'false');
+                    console.log('[USER-MENU] Menu aberto!');
+                    console.log('[USER-MENU] Classes do menu:', menu.className);
+                } else {
+                    console.log('[USER-MENU] Menu fechado');
                 }
             });
 
@@ -122,6 +142,8 @@
                 closeAll();
             }
         });
+
+        console.log('[USER-MENU] Inicialização completa!');
     }
 })();
 </script>
