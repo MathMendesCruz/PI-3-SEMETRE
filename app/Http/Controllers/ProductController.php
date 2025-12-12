@@ -10,12 +10,20 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
-        // Buscar reviews aprovadas com dados do usuário
+        // Buscar reviews aprovadas com dados do usuário (fallback: últimas não-aprovadas se não houver aprovadas)
         $reviews = Review::with('user')
             ->where('approved', true)
             ->orderBy('created_at', 'desc')
-            ->limit(3)
+            ->limit(6)
             ->get();
+
+        // Se não houver aprovadas, mostra as mais recentes para não zerar o bloco de feedback
+        if ($reviews->isEmpty()) {
+            $reviews = Review::with('user')
+                ->orderBy('created_at', 'desc')
+                ->limit(6)
+                ->get();
+        }
 
         // Buscar marcas únicas dos produtos
         $brands = Product::whereNotNull('brand')
