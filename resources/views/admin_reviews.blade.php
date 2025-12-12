@@ -7,7 +7,7 @@
 @section('content')
 <div class="admin-card">
     <h2>Avaliações de Produtos</h2>
-    <p class="subtitle">Total de avaliações: {{ $reviews->total() }}</p>
+    <p class="subtitle">Total de avaliações {{ isset($status) && $status==='pending' ? 'pendentes' : (isset($status) && $status==='approved' ? 'aprovadas' : '') }}: {{ $reviews->total() }}</p>
 
     @if($message = session('success'))
         <div style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
@@ -29,14 +29,28 @@
         <a href="{{ route('adm.reviews') }}" class="active">Avaliações</a>
     </nav>
 
-    <div class="admin-action-bar">
-        <input type="text" id="search-filter" placeholder="Filtrar por produto ou usuário..." class="filter-input" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px; width: 250px;">
-        <button class="btn btn-secondary" onclick="filterByRating('all')">Todas as estrelas</button>
-        <button class="btn btn-secondary" onclick="filterByRating(5)">⭐⭐⭐⭐⭐</button>
-        <button class="btn btn-secondary" onclick="filterByRating(4)">⭐⭐⭐⭐</button>
-        <button class="btn btn-secondary" onclick="filterByRating(3)">⭐⭐⭐</button>
-        <button class="btn btn-secondary" onclick="filterByRating(2)">⭐⭐</button>
-        <button class="btn btn-secondary" onclick="filterByRating(1)">⭐</button>
+    <div class="admin-action-bar" style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+        <form method="GET" action="{{ route('adm.reviews') }}" style="display:flex; gap:10px; align-items:center; flex-wrap: wrap; width:100%;">
+            <select name="status" style="padding:8px 12px; border:1px solid #ddd; border-radius:4px;">
+                <option value="pending" {{ (request('status','pending')==='pending') ? 'selected' : '' }}>Pendentes</option>
+                <option value="approved" {{ request('status')==='approved' ? 'selected' : '' }}>Aprovadas</option>
+                <option value="all" {{ request('status')==='all' ? 'selected' : '' }}>Todas</option>
+            </select>
+
+            <select name="rating" style="padding:8px 12px; border:1px solid #ddd; border-radius:4px;">
+                <option value="">Todas as notas</option>
+                @for($i=5;$i>=1;$i--)
+                    <option value="{{ $i }}" {{ (string)request('rating')===(string)$i ? 'selected' : '' }}>{{ str_repeat('⭐', $i) }}</option>
+                @endfor
+            </select>
+
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Produto ou usuário..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; width: 260px;" />
+
+            <button type="submit" class="btn btn-dark">Filtrar</button>
+            @if(request()->hasAny(['status','rating','search']) && (request('status')||request('rating')||request('search')))
+                <a href="{{ route('adm.reviews') }}" class="btn btn-secondary">Limpar</a>
+            @endif
+        </form>
     </div>
 
     <div class="table-responsive">
@@ -48,6 +62,7 @@
                     <th>Avaliação</th>
                     <th>Comentário</th>
                     <th>Data</th>
+                    <th style="width: 180px;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,6 +95,21 @@
                             </div>
                         </td>
                         <td style="font-size: 0.85em;">{{ $review->created_at->format('d/m/Y H:i') }}</td>
+                        <td>
+                            <div class="action-buttons" style="display:flex; gap:8px; align-items:center;">
+                                @if(!$review->approved)
+                                    <form method="POST" action="{{ route('adm.reviews.approve', $review->id) }}" class="inline-form">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-secondary" style="padding:6px 12px; font-size:0.875em;">Aprovar</button>
+                                    </form>
+                                @endif
+                                <form method="POST" action="{{ route('adm.reviews.reject', $review->id) }}" class="inline-form" onsubmit="return confirm('Tem certeza?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding:6px 12px; font-size:0.875em;">Rejeitar</button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                 @empty
                     <tr>

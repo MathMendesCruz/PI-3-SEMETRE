@@ -77,10 +77,36 @@ class ReviewController extends Controller
 
     public function index()
     {
-        $reviews = Review::with(['user', 'product'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $status = request('status', 'pending');
+        $rating = request('rating');
+        $search = request('search');
 
-        return view('admin_reviews', compact('reviews'));
+        $query = Review::with(['user', 'product'])
+            ->orderBy('created_at', 'desc');
+
+        if ($status === 'pending') {
+            $query->where('approved', false);
+        } elseif ($status === 'approved') {
+            $query->where('approved', true);
+        }
+
+        if (!empty($rating) && in_array((int)$rating, [1,2,3,4,5], true)) {
+            $query->where('rating', (int)$rating);
+        }
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('product', function ($qp) use ($search) {
+                    $qp->where('name', 'like', "%{$search}%");
+                })->orWhereHas('user', function ($qu) use ($search) {
+                    $qu->where('name', 'like', "%{$search}%")
+                       ->orWhere('email', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $reviews = $query->paginate(20)->appends(request()->query());
+
+        return view('admin_reviews', compact('reviews', 'status', 'rating', 'search'));
     }
 }
