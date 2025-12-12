@@ -20,6 +20,7 @@ async function addToCart(productId, quantity = 1, productData = null) {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify({
                 product_id: productId,
                 quantity: quantity
@@ -75,6 +76,7 @@ async function updateCartItem(productId, quantity) {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify({ quantity })
         });
 
@@ -107,7 +109,8 @@ async function removeFromCart(productId) {
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
-            }
+            },
+            credentials: 'same-origin'
         });
 
         const data = await response.json();
@@ -144,6 +147,7 @@ async function applyCoupon() {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify({ code })
         });
 
@@ -191,6 +195,7 @@ async function validateCep() {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify({ cep })
         });
 
