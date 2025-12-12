@@ -102,12 +102,18 @@
   z-index: 3;
 }
 
-/* Botões visíveis sempre (evita que o card capture o clique no mobile) */
+/* Botões somem no hover (pedido: não mostrar ao passar mouse) */
 .add-to-cart-btn-listing,
 .add-to-cart-btn-hover {
-  opacity: 1;
-  visibility: visible;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.product-card:hover .add-to-cart-btn-listing,
+.product-card:hover .add-to-cart-btn-hover {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Hover nos botões */
