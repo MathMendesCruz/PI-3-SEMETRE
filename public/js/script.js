@@ -343,7 +343,15 @@ document.addEventListener('DOMContentLoaded', () => {
             cart.forEach(item => {
                 // Normaliza caminho da imagem: aceita URL absoluta, caminho iniciando com '/', ou apenas nome de arquivo
                 let imgSrc = item.img || '/img/placeholder.svg';
-                if (!(imgSrc.startsWith('/') || imgSrc.startsWith('http')) ) {
+                // Normalização do caminho da imagem:
+                // - se começar com '/' ou 'http' usa como está
+                // - se começar com 'img/' adiciona apenas a barra inicial
+                // - caso contrário prefixa com '/img/'
+                if (imgSrc.startsWith('/') || imgSrc.startsWith('http')) {
+                    // usa como está
+                } else if (imgSrc.startsWith('img/')) {
+                    imgSrc = '/' + imgSrc; // '/img/arquivo.png'
+                } else {
                     imgSrc = '/img/' + imgSrc;
                 }
 

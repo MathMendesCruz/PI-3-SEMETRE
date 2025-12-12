@@ -191,6 +191,9 @@ async function applyCoupon() {
     }
 
     try {
+        // Se o carrinho do backend estiver vazio, enviamos também o carrinho local
+        const localCart = JSON.parse(localStorage.getItem('joalheriaCart') || '[]');
+
         const response = await fetch('/cart/apply-coupon', {
             method: 'POST',
             headers: {
@@ -200,7 +203,7 @@ async function applyCoupon() {
                 'X-Requested-With': 'XMLHttpRequest'
             },
             credentials: 'same-origin',
-            body: JSON.stringify({ code })
+            body: JSON.stringify({ code, cart: localCart })
         });
 
         if (response.redirected) {

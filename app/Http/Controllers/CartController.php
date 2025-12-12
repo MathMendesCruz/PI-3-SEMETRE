@@ -130,10 +130,21 @@ class CartController extends Controller
             ], 400);
         }
 
-        // Calcular subtotal
+        // Calcular subtotal — se o carrinho de sessão estiver vazio, aceitarmos um carrinho enviado no body (fluxo guest)
         $subtotal = 0;
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
+
+        // Se não houver itens na sessão, e o cliente mandou um 'cart' no request, usamos ele
+        $requestCart = $request->input('cart');
+        if (empty($cart) && is_array($requestCart) && count($requestCart) > 0) {
+            foreach ($requestCart as $item) {
+                $price = isset($item['price']) ? floatval($item['price']) : 0;
+                $quantity = isset($item['quantity']) ? intval($item['quantity']) : 0;
+                $subtotal += $price * $quantity;
+            }
+        } else {
+            foreach ($cart as $item) {
+                $subtotal += $item['price'] * $item['quantity'];
+            }
         }
 
         $coupon = Coupon::where('code', $request->code)->first();
