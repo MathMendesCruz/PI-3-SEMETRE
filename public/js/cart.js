@@ -31,6 +31,22 @@ async function addToCart(productId, quantity = 1, productData = null) {
         console.log('Response status:', response.status);
 
         if (response.redirected) {
+            // Possível redirecionamento para login (usuário não autenticado)
+            // Em vez de redirecionar automaticamente, tentar fallback para LocalStorage (guest)
+            try {
+                if (typeof window.addItemToCart === 'function') {
+                    window.addItemToCart(productId);
+                    // Atualiza contador local
+                    const localCart = JSON.parse(localStorage.getItem('joalheriaCart') || '[]');
+                    const localCount = localCart.reduce((s, it) => s + (it.quantity || 1), 0);
+                    updateCartCount(localCount);
+                    showNotification('Produto adicionado ao carrinho (modo convidado)', 'success');
+                    return true;
+                }
+            } catch (err) {
+                console.warn('Fallback para LocalStorage falhou:', err);
+            }
+
             window.location.href = response.url;
             return false;
         }
@@ -45,6 +61,19 @@ async function addToCart(productId, quantity = 1, productData = null) {
             if (response.status === 419) {
                 showNotification('Sessão expirada (CSRF). Recarregue a página e faça login.', 'warning');
             } else if (response.status === 401) {
+                // Usuário não autenticado - tentar fallback para LocalStorage (guest)
+                try {
+                    if (typeof window.addItemToCart === 'function') {
+                        window.addItemToCart(productId);
+                        const localCart = JSON.parse(localStorage.getItem('joalheriaCart') || '[]');
+                        const localCount = localCart.reduce((s, it) => s + (it.quantity || 1), 0);
+                        updateCartCount(localCount);
+                        showNotification('Produto adicionado ao carrinho (modo convidado)', 'success');
+                        return true;
+                    }
+                } catch (err2) {
+                    console.warn('Fallback para LocalStorage falhou:', err2);
+                }
                 window.location.href = '/login';
             } else {
                 showNotification('Não foi possível adicionar ao carrinho. Tente novamente.', 'warning');

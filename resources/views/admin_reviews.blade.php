@@ -76,7 +76,7 @@
                     <th>Avaliação</th>
                     <th>Comentário</th>
                     <th>Data</th>
-                    <th style="width: 180px;">Ações</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -109,16 +109,7 @@
                             </div>
                         </td>
                         <td style="font-size: 0.85em;">{{ $review->created_at->format('d/m/Y H:i') }}</td>
-                        <td>
-                            <div class="action-buttons" style="display:flex; gap:8px; align-items:center;">
-                                @if(!$review->approved)
-                                    <form method="POST" action="{{ route('adm.reviews.approve', $review->id) }}" class="inline-form">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-secondary" style="padding:6px 12px; font-size:0.875em;">Aprovar</button>
-                                    </form>
-                                @endif
-                            </div>
-                        </td>
+
                     </tr>
                 @empty
                     <tr>

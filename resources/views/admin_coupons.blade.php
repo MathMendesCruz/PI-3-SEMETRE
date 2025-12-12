@@ -27,7 +27,7 @@
         <a href="{{ route('adm.orders') }}">Pedidos</a>
         <a href="{{ route('adm.coupons') }}" class="active">Cupons</a>
         <a href="{{ route('adm.reviews') }}">Avaliações</a>
-        <a href="{{ route('adm.coupons.create') }}" class="btn btn-dark" style="margin-left: auto; padding: 8px 16px; font-size: 0.95em;">+ Novo Cupom</a>
+        <a href="{{ route('adm.coupons.create') }}" class="btn btn-dark" style="margin-left: auto; padding: 5px 16px; font-size: 0.95em;">+ Novo Cupom</a>
     </nav>
 
     <div class="admin-action-bar" style="margin-bottom: 20px;">

@@ -126,6 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Carrinho atual:', cart);
     };
 
+    // Tornar a função disponível globalmente para fallback de outros scripts
+    try {
+        window.addItemToCart = addItemToCart;
+    } catch (e) {
+        console.warn('Não foi possível expor addItemToCart globalmente:', e);
+    }
+
     /**
      * Atualiza o carrinho (LocalStorage) com base nos elementos da página.
      * Usado nas páginas 'carrinho.html' e 'pagamento.html'
