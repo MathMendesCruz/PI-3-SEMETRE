@@ -16,8 +16,9 @@ class AdminController extends Controller
         $totalAdmins = User::where('is_admin', true)->count();
         $lowStockProducts = Product::whereRaw('stock <= COALESCE(min_stock, 5)')->count();
         $pendingReviews = \App\Models\Review::where('approved', false)->count();
+        $totalReviews = \App\Models\Review::count();
 
-        return view('admin_dashboard', compact('totalProducts', 'totalUsers', 'totalAdmins', 'lowStockProducts', 'pendingReviews'));
+        return view('admin_dashboard', compact('totalProducts', 'totalUsers', 'totalAdmins', 'lowStockProducts', 'pendingReviews', 'totalReviews'));
     }
 
     public function products()

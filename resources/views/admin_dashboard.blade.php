@@ -23,8 +23,8 @@
                     <p>{{ $lowStockProducts ?? 0 }}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Avaliações Pendentes</h3>
-                    <p>{{ $pendingReviews ?? 0 }}</p>
+                    <h3>Avaliações</h3>
+                    <p>{{ $totalReviews ?? 0 }}</p>
                 </div>
             </div>
 
