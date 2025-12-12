@@ -7,8 +7,8 @@
 @section('content')
 
  <div class="admin-card">
-            <h2>Usuários Cadastrados</h2>
-            <p class="subtitle">Total de usuários: {{ $users->total() }} | Administradores: {{ $admins->total() }}</p>
+            <h2>Clientes Cadastrados</h2>
+            <p class="subtitle">Total de clientes: {{ $users->total() }} | Administradores: {{ $admins->total() }}</p>
 
             @if($message = session('success'))
                 <div style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
@@ -62,7 +62,7 @@
                                             <form action="{{ route('adm.usuarios.delete', $user->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.85em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este usuário?')">Deletar</button>
+                                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.85em; background-color: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Tem certeza que deseja deletar este cliente?')">Deletar</button>
                                             </form>
                                         @else
                                             <span style="color: #999; font-size: 0.9em; padding: 4px 8px;">Você</span>
@@ -73,7 +73,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" style="text-align: center; padding: 30px;">
-                                    <p>Nenhum usuário encontrado.</p>
+                                    <p>Nenhum cliente encontrado.</p>
                                 </td>
                             </tr>
                         @endforelse

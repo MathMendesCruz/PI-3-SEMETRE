@@ -140,10 +140,9 @@
             // Adiciona os próximos produtos
             for (let i = currentIndex; i < Math.min(currentIndex + productsPerPage, allProducts.length); i++) {
                 const product = allProducts[i];
-                const productLink = document.createElement('a');
-                productLink.href = `/produto/${product.id}`;
-                productLink.className = 'product-card';
-                productLink.setAttribute('data-productid', product.id);
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.setAttribute('data-productid', product.id);
 
                 // Usar imagem do produto ou fallback para a primeira disponível
                 const imageUrl = product.image
@@ -153,12 +152,14 @@
                 const priceFormatted = parseFloat(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 const inStock = product.stock > 0;
 
-                productLink.innerHTML = `
-                    <img src="${imageUrl}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p class="price">
-                        <span class="sale">R$ ${priceFormatted}</span>
-                    </p>
+                productCard.innerHTML = `
+                    <a href="/produto/${product.id}" style="text-decoration: none; color: inherit;">
+                        <img src="${imageUrl}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p class="price">
+                            <span class="sale">R$ ${priceFormatted}</span>
+                        </p>
+                    </a>
                     ${inStock ? `
                         <button class="btn btn-dark add-to-cart-btn-hover"
                                 data-product-id="${product.id}"
@@ -169,7 +170,7 @@
                         </button>
                     ` : '<span class="out-of-stock">Indisponível</span>'}
                 `;
-                gridContainer.appendChild(productLink);
+                gridContainer.appendChild(productCard);
             }
 
             currentIndex += productsPerPage;
