@@ -6,6 +6,23 @@
 // Configuração do CSRF Token
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
+// Fallback helper para adicionar ao carrinho local quando backend falha ou redireciona
+function fallbackAddToLocalCart(productId) {
+    try {
+        if (typeof window.addItemToCart === 'function') {
+            window.addItemToCart(productId);
+            const localCart = JSON.parse(localStorage.getItem('joalheriaCart') || '[]');
+            const localCount = localCart.reduce((s, it) => s + (it.quantity || 1), 0);
+            updateCartCount(localCount);
+            showNotification('Produto adicionado ao carrinho (modo convidado)', 'success');
+            return true;
+        }
+    } catch (err) {
+        console.warn('Fallback para LocalStorage falhou:', err);
+    }
+    return false;
+}
+
 /**
  * Adiciona produto ao carrinho
  */
@@ -31,22 +48,7 @@ async function addToCart(productId, quantity = 1, productData = null) {
         console.log('Response status:', response.status);
 
         if (response.redirected) {
-            // Possível redirecionamento para login (usuário não autenticado)
-            // Em vez de redirecionar automaticamente, tentar fallback para LocalStorage (guest)
-            try {
-                if (typeof window.addItemToCart === 'function') {
-                    window.addItemToCart(productId);
-                    // Atualiza contador local
-                    const localCart = JSON.parse(localStorage.getItem('joalheriaCart') || '[]');
-                    const localCount = localCart.reduce((s, it) => s + (it.quantity || 1), 0);
-                    updateCartCount(localCount);
-                    showNotification('Produto adicionado ao carrinho (modo convidado)', 'success');
-                    return true;
-                }
-            } catch (err) {
-                console.warn('Fallback para LocalStorage falhou:', err);
-            }
-
+            if (fallbackAddToLocalCart(productId)) return true;
             window.location.href = response.url;
             return false;
         }
@@ -61,21 +63,10 @@ async function addToCart(productId, quantity = 1, productData = null) {
             if (response.status === 419) {
                 showNotification('Sessão expirada (CSRF). Recarregue a página e faça login.', 'warning');
             } else if (response.status === 401) {
-                // Usuário não autenticado - tentar fallback para LocalStorage (guest)
-                try {
-                    if (typeof window.addItemToCart === 'function') {
-                        window.addItemToCart(productId);
-                        const localCart = JSON.parse(localStorage.getItem('joalheriaCart') || '[]');
-                        const localCount = localCart.reduce((s, it) => s + (it.quantity || 1), 0);
-                        updateCartCount(localCount);
-                        showNotification('Produto adicionado ao carrinho (modo convidado)', 'success');
-                        return true;
-                    }
-                } catch (err2) {
-                    console.warn('Fallback para LocalStorage falhou:', err2);
-                }
+                if (fallbackAddToLocalCart(productId)) return true;
                 window.location.href = '/login';
             } else {
+                if (fallbackAddToLocalCart(productId)) return true;
                 showNotification('Não foi possível adicionar ao carrinho. Tente novamente.', 'warning');
             }
             return false;
@@ -88,11 +79,14 @@ async function addToCart(productId, quantity = 1, productData = null) {
             showNotification('Produto adicionado ao carrinho!', 'success');
             return true;
         } else {
+            // Se o backend recusar, ainda permitimos carrinho local para não quebrar UX guest
+            if (fallbackAddToLocalCart(productId)) return true;
             showNotification(data.message || 'Erro ao adicionar produto', 'error');
             return false;
         }
     } catch (error) {
         console.error('Erro:', error);
+        if (fallbackAddToLocalCart(productId)) return true;
         showNotification('Erro ao adicionar produto ao carrinho', 'error');
         return false;
     }
