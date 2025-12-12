@@ -30,26 +30,7 @@
                 @csrf
                 @method('PUT')
 
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 500;">Foto de Perfil</label>
-                    <div style="display: flex; gap: 20px; align-items: flex-start;">
-                        <div>
-                            @if(auth()->user()->avatar)
-                                <img id="avatar-preview" src="{{ asset(auth()->user()->avatar) }}" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;">
-                            @else
-                                <div id="avatar-preview" style="width: 120px; height: 120px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border: 3px solid #ddd;">
-                                    <i class="fas fa-user fa-3x" style="color: #ccc;"></i>
-                                </div>
-                            @endif
-                        </div>
-                        <div>
-                            <label for="avatar" class="btn btn-dark" style="display: inline-block; padding: 10px 20px; cursor: pointer;">Escolher Foto</label>
-                            <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;" onchange="previewAvatar(event)">
-                            <p style="color: #666; font-size: 13px; margin-top: 10px;">JPG, PNG ou GIF (máx: 2MB)</p>
-                            @error('avatar')<span style="color: #d32f2f; font-size: 0.9em; display: block; margin-top: 5px;">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
+                <!-- Seção de avatar removida do perfil -->
 
                 <hr style="margin: 30px 0;">
 
@@ -131,23 +112,4 @@
     </div>
 </div>
 
-@section('extra-scripts')
-<script>
-function previewAvatar(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('avatar-preview');
-            if (preview.tagName === 'DIV') {
-                preview.innerHTML = '<img src="' + e.target.result + '" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">';
-            } else {
-                preview.src = e.target.result;
-            }
-        };
-        reader.readAsDataURL(file);
-    }
-}
-</script>
-@endsection
 @endsection

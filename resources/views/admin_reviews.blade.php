@@ -7,7 +7,14 @@
 @section('content')
 <div class="admin-card">
     <h2>Avaliações de Produtos</h2>
-    <p class="subtitle">Total de avaliações {{ isset($status) && $status==='pending' ? 'pendentes' : (isset($status) && $status==='approved' ? 'aprovadas' : '') }}: {{ $reviews->total() }}</p>
+    @php
+        $countLabel = '';
+        if (isset($status) && $status==='pending') $countLabel = 'pendentes';
+        elseif (isset($status) && $status==='approved') $countLabel = 'aprovadas';
+        else $countLabel = 'totais';
+        $total_count = $total_pending ?? $total_approved ?? $total_all ?? ($reviews->total() ?? 0);
+    @endphp
+    <p class="subtitle">Total de avaliações {{ $countLabel }}: {{ $total_count }}</p>
 
     @if($message = session('success'))
         <div style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
@@ -122,7 +129,7 @@
         </table>
     </div>
 
-    @if($reviews->hasPages())
+    @if(method_exists($reviews, 'hasPages') && $reviews->hasPages())
         <div style="margin-top: 20px;">
             {{ $reviews->links('vendor.pagination.simple') }}
         </div>

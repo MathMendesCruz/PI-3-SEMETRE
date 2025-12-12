@@ -6,6 +6,8 @@ use App\Models\Review;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ReviewController extends Controller
 {
@@ -81,32 +83,47 @@ class ReviewController extends Controller
         $rating = request('rating');
         $search = request('search');
 
-        $query = Review::with(['user', 'product'])
-            ->orderBy('created_at', 'desc');
+        // Tentar acessar o banco e construir a query. Em caso de erro, retornar uma paginação vazia e mensagem.
+        try {
+            // Contagens para o painel
+            $total_all = Review::count();
+            $total_pending = Review::where('approved', false)->count();
+            $total_approved = Review::where('approved', true)->count();
 
-        if ($status === 'pending') {
-            $query->where('approved', false);
-        } elseif ($status === 'approved') {
-            $query->where('approved', true);
-        }
+            $query = Review::with(['user', 'product'])
+                ->orderBy('created_at', 'desc');
 
-        if (!empty($rating) && in_array((int)$rating, [1,2,3,4,5], true)) {
-            $query->where('rating', (int)$rating);
-        }
+            if ($status === 'pending') {
+                $query->where('approved', false);
+            } elseif ($status === 'approved') {
+                $query->where('approved', true);
+            }
 
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('product', function ($qp) use ($search) {
-                    $qp->where('name', 'like', "%{$search}%");
-                })->orWhereHas('user', function ($qu) use ($search) {
-                    $qu->where('name', 'like', "%{$search}%")
-                       ->orWhere('email', 'like', "%{$search}%");
+            if (!empty($rating) && in_array((int)$rating, [1,2,3,4,5], true)) {
+                $query->where('rating', (int)$rating);
+            }
+
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->whereHas('product', function ($qp) use ($search) {
+                        $qp->where('name', 'like', "%{$search}%");
+                    })->orWhereHas('user', function ($qu) use ($search) {
+                        $qu->where('name', 'like', "%{$search}%")
+                           ->orWhere('email', 'like', "%{$search}%");
+                    });
                 });
-            });
+            }
+
+            $reviews = $query->paginate(20)->appends(request()->query());
+
+            return view('admin_reviews', compact('reviews', 'status', 'rating', 'search', 'total_all', 'total_pending', 'total_approved'));
+        } catch (\Exception $e) {
+            // Problema ao consultar o DB — retornar paginator vazio para evitar erros no view
+            $empty = [];
+            $reviews = new LengthAwarePaginator($empty, 0, 20);
+            // Passar a mensagem de erro para a view
+            return view('admin_reviews', compact('reviews', 'status', 'rating', 'search'))
+                ->with('error', 'Erro ao consultar o banco de dados: ' . $e->getMessage());
         }
-
-        $reviews = $query->paginate(20)->appends(request()->query());
-
-        return view('admin_reviews', compact('reviews', 'status', 'rating', 'search'));
     }
 }
