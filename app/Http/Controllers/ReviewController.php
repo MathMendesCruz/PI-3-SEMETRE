@@ -121,8 +121,8 @@ class ReviewController extends Controller
             // Problema ao consultar o DB — retornar paginator vazio para evitar erros no view
             $empty = [];
             $reviews = new LengthAwarePaginator($empty, 0, 20);
-            // Passar a mensagem de erro para a view
-            return view('admin_reviews', compact('reviews', 'status', 'rating', 'search'))
+            $total_all = $total_pending = $total_approved = 0;
+            return view('admin_reviews', compact('reviews', 'status', 'rating', 'search', 'total_all', 'total_pending', 'total_approved'))
                 ->with('error', 'Erro ao consultar o banco de dados: ' . $e->getMessage());
         }
     }
