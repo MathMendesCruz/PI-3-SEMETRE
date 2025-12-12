@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class CartController extends Controller
 {
@@ -193,19 +194,26 @@ class CartController extends Controller
 
         $cep = preg_replace('/[^0-9]/', '', $request->cep);
 
-        // Integração com API ViaCEP
-        $response = @file_get_contents("https://viacep.com.br/ws/{$cep}/json/");
-
-        if (!$response) {
+        // Integração com API ViaCEP (com timeout e tratamento de falha)
+        try {
+            $response = Http::timeout(5)->get("https://viacep.com.br/ws/{$cep}/json/");
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erro ao consultar CEP',
+                'message' => 'Erro ao consultar CEP. Tente novamente em instantes.',
             ], 500);
         }
 
-        $data = json_decode($response, true);
+        if ($response->failed()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao consultar CEP. Tente novamente em instantes.',
+            ], 500);
+        }
 
-        if (isset($data['erro'])) {
+        $data = $response->json();
+
+        if (!$data || isset($data['erro'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'CEP não encontrado',
