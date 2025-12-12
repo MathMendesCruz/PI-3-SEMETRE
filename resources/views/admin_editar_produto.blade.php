@@ -59,6 +59,24 @@
                         <input type="text" id="brand" name="brand" value="{{ old('brand', $product->brand) }}" placeholder="Ex: VERSACE, GUCCI, PRADA">
                     </div>
                     <div class="form-group">
+                        <label for="color">Cor *</label>
+                        <select id="color" name="color" required onchange="toggleNewColorInputEdit(this)">
+                            <option value="">Selecione uma cor</option>
+                            @php
+                                $existingColors = \App\Models\Product::select('color')->distinct()->whereNotNull('color')->pluck('color')->toArray();
+                            @endphp
+                            @foreach($existingColors as $color)
+                                <option value="{{ $color }}" {{ old('color', $product->color) === $color ? 'selected' : '' }}>{{ ucfirst($color) }}</option>
+                            @endforeach
+                            <option value="__nova__" {{ old('color') === '__nova__' ? 'selected' : '' }}>+ Adicionar Nova Cor</option>
+                        </select>
+                        <input type="text" id="new_color_edit" name="new_color" value="{{ old('new_color') }}"
+                               placeholder="Digite o nome da nova cor"
+                               style="display: {{ old('color') === '__nova__' ? 'block' : 'none' }}; margin-top: 10px;">
+                        @error('color')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
+                        @error('new_color')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group">
                         <label for="stock">Quantidade em Estoque *</label>
                         <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" required placeholder="Ex: 10" min="0">
                         @error('stock')<span style="color: #d32f2f; font-size: 0.9em;">{{ $message }}</span>@enderror
@@ -117,6 +135,18 @@
                 if (placeholderText) placeholderText.style.display = 'none';
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    function toggleNewColorInputEdit(select) {
+        const newColorInput = document.getElementById('new_color_edit');
+        if (select.value === '__nova__') {
+            newColorInput.style.display = 'block';
+            newColorInput.required = true;
+        } else {
+            newColorInput.style.display = 'none';
+            newColorInput.required = false;
+            newColorInput.value = '';
         }
     }
 </script>

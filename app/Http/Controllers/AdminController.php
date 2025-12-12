@@ -40,7 +40,8 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|in:feminino,masculino',
             'brand' => 'nullable|string|max:100',
-            'color' => 'nullable|string|in:ouro,prata,neutro',
+            'color' => 'required|string',
+            'new_color' => 'required_if:color,__nova__|nullable|string|max:50',
             'stock' => 'required|integer|min:0',
             'min_stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
@@ -50,12 +51,20 @@ class AdminController extends Controller
             'description.required' => 'Descrição é obrigatória',
             'price.required' => 'Preço é obrigatório',
             'category.required' => 'Categoria é obrigatória',
+            'color.required' => 'Cor é obrigatória',
+            'new_color.required_if' => 'Digite o nome da nova cor',
             'stock.required' => 'Estoque é obrigatório',
             'image.image' => 'O arquivo deve ser uma imagem',
             'image.max' => 'A imagem não pode ser maior que 2MB',
         ]);
 
         try {
+            // Processar cor
+            if ($validated['color'] === '__nova__') {
+                $validated['color'] = strtolower(trim($validated['new_color']));
+            }
+            unset($validated['new_color']);
+
             // Upload de imagem
             if ($request->hasFile('image')) {
                 // Garante que o diretório existe
@@ -126,7 +135,8 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|in:feminino,masculino',
             'brand' => 'nullable|string|max:100',
-            'color' => 'nullable|string|in:ouro,prata,neutro',
+            'color' => 'required|string',
+            'new_color' => 'required_if:color,__nova__|nullable|string|max:50',
             'stock' => 'required|integer|min:0',
             'min_stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
@@ -134,6 +144,12 @@ class AdminController extends Controller
         ]);
 
         try {
+            // Processar cor
+            if ($validated['color'] === '__nova__') {
+                $validated['color'] = strtolower(trim($validated['new_color']));
+            }
+            unset($validated['new_color']);
+
             // Upload de nova imagem
             if ($request->hasFile('image')) {
                 // Remove imagem antiga se não for padrão

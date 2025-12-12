@@ -72,12 +72,30 @@ class ProductFromImagesSeeder extends Seeder
 
     private function humanizeName(string $raw): string
     {
-        $clean = preg_replace('/[_-]+/', ' ', $raw);
+        // Remover extensão se houver
+        $clean = preg_replace('/\.(jpg|jpeg|png|gif|webp)$/i', '', $raw);
+
+        // Substituir underscores e hífens por espaços
+        $clean = preg_replace('/[_-]+/', ' ', $clean);
+
+        // Remover números e caracteres hexadecimais isolados
+        $clean = preg_replace('/\b[0-9a-f]{1,2}\b/i', '', $clean ?? '');
+
+        // Remover números em geral
+        $clean = preg_replace('/\d+/', '', $clean ?? '');
+
+        // Remover múltiplos espaços
         $clean = preg_replace('/\s+/', ' ', $clean ?? '');
-        $clean = preg_replace('/\d+/', ' ', $clean ?? '');
-        $clean = trim($clean ?? 'Produto Elegance');
-        $clean = $clean === '' ? 'Produto Elegance' : $clean;
-        return ucwords($clean);
+
+        // Limpar espaços nas extremidades
+        $clean = trim($clean ?? '');
+
+        // Se ficou vazio, usar nome padrão
+        if ($clean === '' || strlen($clean) < 3) {
+            return 'Joia Elegance';
+        }
+
+        return ucwords(strtolower($clean));
     }
 
     private function detectColor(string $raw): string

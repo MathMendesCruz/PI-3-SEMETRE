@@ -75,6 +75,24 @@
                         <input type="text" id="brand" name="brand" value="{{ old('brand') }}" placeholder="Ex: VERSACE, GUCCI, PRADA">
                     </div>
                     <div class="form-group">
+                        <label for="color">Cor *</label>
+                        <select id="color" name="color" required onchange="toggleNewColorInput(this)">
+                            <option value="">Selecione uma cor</option>
+                            @php
+                                $existingColors = \App\Models\Product::select('color')->distinct()->whereNotNull('color')->pluck('color')->toArray();
+                            @endphp
+                            @foreach($existingColors as $color)
+                                <option value="{{ $color }}" {{ old('color') === $color ? 'selected' : '' }}>{{ ucfirst($color) }}</option>
+                            @endforeach
+                            <option value="__nova__" {{ old('color') === '__nova__' ? 'selected' : '' }}>+ Adicionar Nova Cor</option>
+                        </select>
+                        <input type="text" id="new_color" name="new_color" value="{{ old('new_color') }}"
+                               placeholder="Digite o nome da nova cor"
+                               style="display: {{ old('color') === '__nova__' ? 'block' : 'none' }}; margin-top: 10px;">
+                        @error('color')<span class="error-text">{{ $message }}</span>@enderror
+                        @error('new_color')<span class="error-text">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group">
                         <label for="stock">Quantidade em Estoque *</label>
                         <input type="number" id="stock" name="stock" value="{{ old('stock') }}" required placeholder="Ex: 10" min="0">
                         @error('stock')<span class="error-text">{{ $message }}</span>@enderror
@@ -127,6 +145,18 @@ function previewImage(event) {
             text.textContent = 'Imagem selecionada: ' + file.name;
         }
         reader.readAsDataURL(file);
+    }
+}
+
+function toggleNewColorInput(select) {
+    const newColorInput = document.getElementById('new_color');
+    if (select.value === '__nova__') {
+        newColorInput.style.display = 'block';
+        newColorInput.required = true;
+    } else {
+        newColorInput.style.display = 'none';
+        newColorInput.required = false;
+        newColorInput.value = '';
     }
 }
 </script>
